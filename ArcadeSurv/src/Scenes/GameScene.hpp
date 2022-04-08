@@ -4,7 +4,7 @@
 #include "../Entities/PlayerEntity.hpp"
 #include "../Entities/EnemyEntity.hpp"
 
-#include <list>
+#include <vector>
 
 class GameScene : public Scene
 {
@@ -18,7 +18,9 @@ class GameScene : public Scene
 		virtual void Render(sf::RenderTarget& renderer) override;
 
 	private:
+		void CheckForCollisions(float dt);
+
 		PlayerEntity m_Player;
 
-		std::list<EnemyEntity> m_Enemies;
+		std::vector<EnemyEntity> m_Enemies;
 };

@@ -20,6 +20,9 @@ GameScene::GameScene()
 
 	prototype.SetPosition({ 700.0f, 200.0f });
 	m_Enemies.push_back(prototype);
+
+	prototype.SetPosition({ 2.0f, 9.0f });
+	m_Enemies.push_back(prototype);
 }
 
 void GameScene::HandleEvents(sf::Event& e)
@@ -35,6 +38,9 @@ void GameScene::HandleInput(float dt)
 
 void GameScene::Update(float dt)
 {
+	if(m_Player.IsVulnerable())
+		CheckForCollisions(dt);
+
 	m_Player.Update(dt);
 
 	for(auto& enemy : m_Enemies)
@@ -49,4 +55,19 @@ void GameScene::Render(sf::RenderTarget& renderer)
 	
 	for(auto& enemy : m_Enemies)
 		enemy.Render(renderer);
+}
+
+void GameScene::CheckForCollisions(float dt)
+{
+	sf::FloatRect playerCollider = m_Player.GetCollider();
+
+	for(auto& enemy : m_Enemies)
+	{
+		if(enemy.GetCollider().intersects(playerCollider))
+		{
+			m_Player.OnDamage(10, dt);
+
+			break;
+		}
+	}
 }

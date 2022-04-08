@@ -15,6 +15,7 @@ class Entity
 		virtual void SetPosition(const sf::Vector2f& pos);
 		virtual void SetMovementSpeed(float ms);
 
+		virtual inline sf::FloatRect GetCollider() const { return m_Body.getGlobalBounds(); }
 		virtual inline sf::Vector2f GetPosition() const { return m_Body.getPosition(); }
 
 	protected:

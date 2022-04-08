@@ -2,17 +2,15 @@
 
 #include "Enitity.hpp"
 
-class PlayerEntity;
-
-class EnemyEntity : public Entity
+class BulletEntity : public Entity
 {
 	public:
-		EnemyEntity(PlayerEntity* playerPtr);
-		virtual ~EnemyEntity() = default;
+		BulletEntity(const sf::Vector2f& dir, float travelSpeed);
+		virtual ~BulletEntity() = default;
 
 		virtual void Update(float dt) override;
 		virtual void Render(sf::RenderTarget& renderer) override;
 
 	private:
-		PlayerEntity* m_PlayerPtr;
+		sf::Vector2f m_TravelDir;
 };
