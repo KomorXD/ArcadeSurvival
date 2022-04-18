@@ -1,14 +1,76 @@
 #include "PlayerEntity.hpp"
+#include "../Scenes/GameScene.hpp"
+#include "../Effects/HasteEffect.hpp"
 
-PlayerEntity::PlayerEntity()
-	: Entity(50.0f), m_MoveDir({ 0.0f, 0.0f }), m_FacingDir({ 1.0f, 0.0f }), m_HP(100), m_InvulnFrames(0)
+#include <ranges>
+#include <algorithm>
+
+PlayerEntity::PlayerEntity(GameScene* scene)
+	: Entity(scene, 100.0f), m_MoveDir({ 0.0f, 0.0f }), m_FacingDir({ 0.0f, 1.0f })
 {
-	m_Body.setFillColor(sf::Color::Cyan);
 	m_PlayerCameraView.setCenter(640.0f, 360.0f);
 	m_PlayerCameraView.setSize(1280.0f, 720.0f);
+
+	m_InterfaceView.setCenter(640.0f, 360.0f);
+	m_InterfaceView.setSize(1280.0f, 720.0f);
+	
+	m_Body.setTextureRect({ 0, 0, 32, 32 });
 }
 
-void PlayerEntity::Input()
+void PlayerEntity::Input(float dt)
+{
+	MovementInput();
+	FacingDirInput();
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && m_FireFrames == 0)
+	{
+		sf::Vector2f origin{ GetPosition().x + m_Body.getSize().x / 2.0f, GetPosition().y + m_Body.getSize().y / 2.0f };
+
+		m_Scene->SpawnBullet(m_FacingDir, origin, 500.0f, 10.0f * m_DamageMultiplier);
+		m_FireFrames = static_cast<int32_t>((1 / dt) / (m_FireRate * m_FireRateMultiplier));
+	}
+}
+
+void PlayerEntity::OnDamage(int32_t damage, float dt)
+{
+	m_HP = std::max(m_HP - damage, 0);
+	m_InvulnFrames = static_cast<int32_t>(1 / dt);
+}
+
+void PlayerEntity::SetSpeedMultiplier(float mul)
+{
+	m_SpeedMultiplier = mul;
+}
+
+void PlayerEntity::SetDamageMultiplier(float mul)
+{
+	m_DamageMultiplier = mul;
+}
+
+void PlayerEntity::SetFireRateMultiplier(float mul)
+{
+	m_FireRateMultiplier = mul;
+}
+
+void PlayerEntity::ApplyEffect(std::unique_ptr<Effect>&& effect)
+{
+	EffectType newEffectType = effect->GetEffectType();
+
+	for(auto& eff : m_Effects)
+	{
+		if(eff->GetEffectType() == newEffectType)
+		{
+			eff->RefreshEffect(effect->TimeLeft());
+
+			return;
+		}
+	}
+
+	effect->BindEffect(this);
+	m_Effects.push_back(std::move(effect));
+}
+
+void PlayerEntity::MovementInput()
 {
 	sf::Vector2f wishDir(0.0f, 0.0f);
 
@@ -29,37 +91,110 @@ void PlayerEntity::Input()
 	if(len != 0.0f)
 		wishDir /= len;
 
-	if(len == 1.0f)
-		m_FacingDir = wishDir;
-
 	m_MoveDir = wishDir;
 }
 
-void PlayerEntity::OnDamage(int32_t damage, float dt)
+void PlayerEntity::FacingDirInput()
 {
-	m_HP = std::max(m_HP - damage, 0);
-	m_InvulnFrames = 2 / dt;
+	int32_t vulnOffset = IsVulnerable() ? 0 : 128;
+	int32_t texRectY = m_Body.getTextureRect().top;
 
-	printf("Took %d damage\tCurr HP: %d\n", damage, m_HP);
-}
-
-void PlayerEntity::Update(float dt)
-{
-	if(m_HP == 0)
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		printf("ded xd\n");
+		m_FacingDir = {  0.0f, -1.0f  };
+		m_Body.setTextureRect({ vulnOffset + 96, texRectY, 32, 32 });
 
 		return;
 	}
 
-	--m_InvulnFrames;
-	m_InvulnFrames = std::max(m_InvulnFrames - 1, 0);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		m_FacingDir = {  0.0f,  1.0f  };
+		m_Body.setTextureRect({ vulnOffset + 0, texRectY, 32, 32 });
 
-	m_Body.move(m_MoveDir * m_MovementSpeed * dt);
-	m_PlayerCameraView.move(m_MoveDir * m_MovementSpeed * dt);
+		return;
+	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		m_FacingDir = { -1.0f,  0.0f  };
+		m_Body.setTextureRect({ vulnOffset + 32, texRectY, 32, 32 });
+
+		return;
+	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		m_FacingDir = {  1.0f,  0.0f  };
+		m_Body.setTextureRect({ vulnOffset + 64, texRectY, 32, 32 });
+
+		return;
+	}
+}
+
+void PlayerEntity::UpdateAnimation(float dt)
+{
+	int32_t texRectX = m_Body.getTextureRect().left;
+	int32_t texRectY = m_Body.getTextureRect().top;
+
+	if(IsVulnerable() && texRectX >= 128)
+		texRectX -= 128;
+
+	if(!IsVulnerable() && texRectX < 128)
+		texRectX += 128;
+
+	m_AnimationFrames = std::max(m_AnimationFrames - 1, 0);
+
+	if(m_AnimationFrames == 0)
+	{
+		m_AnimationFrames = static_cast<int32_t>(0.5f / (dt * m_SpeedMultiplier));
+		texRectY = 32 - texRectY;
+	}
+
+	m_Body.setTextureRect({ texRectX, texRectY, 32, 32 });
+}
+
+void PlayerEntity::UpdateEffects(float dt)
+{
+	auto itr = std::ranges::find_if(m_Effects, [&](const std::unique_ptr<Effect>& effect)
+	{
+		return effect->TimeLeft() == 0.0f;
+	});
+
+	if(itr != m_Effects.end())
+		m_Effects.erase(itr);
+
+	for(auto& eff : m_Effects)
+		eff->Update(dt);
+
+	UpdateIcons();
+}
+
+void PlayerEntity::UpdateIcons()
+{
+	for(int64_t i = 0; i < m_Effects.size(); ++i)
+		m_Effects[i]->SetIconPosition({ 32.0f * i + 1.0f, 1.0f });
+}
+
+void PlayerEntity::Update(float dt)
+{
+	m_InvulnFrames = std::max(m_InvulnFrames - 1, 0);
+	m_FireFrames   = std::max(m_FireFrames - 1, 0);
+
+	UpdateAnimation(dt);
+	UpdateEffects(dt);
+
+	m_Body.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
+	m_PlayerCameraView.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
 }
 
 void PlayerEntity::Render(sf::RenderTarget& renderer)
 {
 	renderer.draw(m_Body);
+	renderer.setView(m_InterfaceView);
+	
+	for(auto& effect : m_Effects)
+		effect->RenderIcon(renderer);
+
+	renderer.setView(m_PlayerCameraView);
 }

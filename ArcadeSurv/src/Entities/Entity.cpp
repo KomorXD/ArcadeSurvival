@@ -1,8 +1,11 @@
 #include "Enitity.hpp"
 
-Entity::Entity(float size)
-	: m_Body({ size, size * 2.0f }), m_MovementSpeed(100.0f)
-{ }
+Entity::Entity(GameScene* scene, float size)
+	: m_Scene(scene), m_Body({ size, size }), m_MovementSpeed(100.0f)
+{
+	m_Body.setOutlineThickness(1.0f);
+	m_Body.setOutlineColor(sf::Color::Red);
+}
 
 void Entity::Render(sf::RenderTarget& renderer)
 {

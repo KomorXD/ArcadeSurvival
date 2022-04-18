@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <iostream>
 
 template<typename ResourceType>
 class ResourceManager
@@ -18,7 +19,11 @@ class ResourceManager
 			ResourceType res;
 
 			if(!res.loadFromFile(GetFullPath(name)))
+			{
+				std::cerr << "Failed to load resource: " << GetFullPath(name) << '\n';
+
 				return false;
+			}
 
 			m_Resources.insert(std::make_pair(name, res));
 
@@ -30,7 +35,11 @@ class ResourceManager
 			auto itr = m_Resources.find(name);
 
 			if(itr == m_Resources.end())
+			{
+				std::cerr << "Failed to release resource: " << GetFullPath(name) << " - no such resource to erase\n";
+
 				return false;
+			}
 
 			m_Resources.erase(itr);
 
@@ -42,7 +51,11 @@ class ResourceManager
 			auto itr = m_Resources.find(name);
 
 			if(itr == m_Resources.end())
+			{
+				std::cerr << "Failed to get resource " << GetFullPath(name) << " - it doesn't exist\n";
+
 				return nullptr;
+			}
 			
 			return &((*itr).second);
 		}

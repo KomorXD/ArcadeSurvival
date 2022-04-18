@@ -3,7 +3,7 @@
 
 int main()
 {
-    Application::Init(1000, 800, "lol");
+    Application::Init(1280, 720, "lol");
     Application::GetInstance().SetScene(new GameScene());
     Application::GetInstance().Run();
     Application::Destroy();

@@ -42,6 +42,18 @@
     <ClCompile Include="src\Entities\BulletEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Effects\Effect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effects\HasteEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entities\EffectEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effects\QuadDmgEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp">
@@ -72,6 +84,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Entities\BulletEntity.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effects\Effect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effects\HasteEffect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entities\EffectEntity.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effects\QuadDmgEffect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,6 +11,9 @@ class Application
 
 		sf::RenderWindow& GetWindow();
 		void SetScene(Scene* scene);
+		void SetWindowView(const sf::View& view);
+
+		inline sf::Vector2u GetWindowSize() const { return m_Window.getSize(); }
 
 		static void Init(uint32_t width, uint32_t height, const char* title);
 		static void Destroy();
@@ -22,7 +25,7 @@ class Application
 		~Application();
 		
 		sf::RenderWindow m_Window;
-		Scene* m_Scene;
+		Scene* m_Scene = nullptr;
 
 		static inline Application* s_Instance;
 };

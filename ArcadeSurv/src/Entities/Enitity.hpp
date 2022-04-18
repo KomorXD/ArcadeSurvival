@@ -2,10 +2,12 @@
 
 #include <SFML/Graphics.hpp>
 
+class GameScene;
+
 class Entity
 {
 	public:
-		Entity(float size);
+		Entity(GameScene* scene, float size);
 		virtual ~Entity() = default;
 
 		virtual void Update(float dt)					= 0;
@@ -19,6 +21,8 @@ class Entity
 		virtual inline sf::Vector2f GetPosition() const { return m_Body.getPosition(); }
 
 	protected:
+		GameScene* m_Scene;
+
 		sf::RectangleShape m_Body;
 		float m_MovementSpeed;
 };

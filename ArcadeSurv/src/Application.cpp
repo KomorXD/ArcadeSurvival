@@ -6,12 +6,10 @@ void Application::Run()
 {
 	sf::Clock timer;
 	sf::Event ev;
-	float	  dt = 0.0f;
+	float	  dt = 1.0f / 30.0f;
 
 	while(m_Window.isOpen())
 	{
-		dt = std::min(timer.restart().asSeconds(), 1.0f / 30.0f);
-
 		while(m_Window.pollEvent(ev))
 		{
 			m_Scene->HandleEvents(ev);
@@ -27,6 +25,8 @@ void Application::Run()
 		m_Scene->Render(m_Window);
 
 		m_Window.display();
+
+		dt = std::min(timer.restart().asSeconds(), 1.0f / 30.0f);
 	}
 }
 
@@ -48,6 +48,11 @@ void Application::SetScene(Scene* scene)
 	m_Scene = scene;
 }
 
+void Application::SetWindowView(const sf::View& view)
+{
+	m_Window.setView(view);
+}
+
 void Application::Destroy()
 {
 	if(s_Instance)
@@ -56,7 +61,9 @@ void Application::Destroy()
 
 Application::Application(uint32_t width, uint32_t height, const char* title)
 	: m_Window({ width, height }, title, sf::Style::Titlebar | sf::Style::Close)
-{ }
+{
+	// m_Window.setFramerateLimit(60);
+}
 
 Application::~Application()
 {
