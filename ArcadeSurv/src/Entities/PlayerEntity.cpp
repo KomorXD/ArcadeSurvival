@@ -1,12 +1,12 @@
 #include "PlayerEntity.hpp"
 #include "../Scenes/GameScene.hpp"
-#include "../Effects/HasteEffect.hpp"
+#include "../Utils/Resources.hpp"
 
 #include <ranges>
 #include <algorithm>
 
 PlayerEntity::PlayerEntity(GameScene* scene)
-	: Entity(scene, 100.0f), m_MoveDir({ 0.0f, 0.0f }), m_FacingDir({ 0.0f, 1.0f })
+	: Entity(scene, 64.0f), m_MoveDir({ 0.0f, 0.0f }), m_FacingDir({ 0.0f, 1.0f })
 {
 	m_PlayerCameraView.setCenter(640.0f, 360.0f);
 	m_PlayerCameraView.setSize(1280.0f, 720.0f);
@@ -15,6 +15,9 @@ PlayerEntity::PlayerEntity(GameScene* scene)
 	m_InterfaceView.setSize(1280.0f, 720.0f);
 	
 	m_Body.setTextureRect({ 0, 0, 32, 32 });
+
+	m_ShootingSound.setBuffer(*Resources::Get().GetSoundBuffer("shoot"));
+	m_ShootingSound.setVolume(50.0f);
 }
 
 void PlayerEntity::Input(float dt)
@@ -24,10 +27,10 @@ void PlayerEntity::Input(float dt)
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && m_FireFrames == 0)
 	{
-		sf::Vector2f origin{ GetPosition().x + m_Body.getSize().x / 2.0f, GetPosition().y + m_Body.getSize().y / 2.0f };
-
-		m_Scene->SpawnBullet(m_FacingDir, origin, 500.0f, 10.0f * m_DamageMultiplier);
+		m_Scene->SpawnBullet(m_FacingDir, GetPosition(), 500.0f, 10.0f * m_DamageMultiplier);
 		m_FireFrames = static_cast<int32_t>((1 / dt) / (m_FireRate * m_FireRateMultiplier));
+
+		m_ShootingSound.play();
 	}
 }
 
@@ -54,16 +57,24 @@ void PlayerEntity::SetFireRateMultiplier(float mul)
 
 void PlayerEntity::ApplyEffect(std::unique_ptr<Effect>&& effect)
 {
-	EffectType newEffectType = effect->GetEffectType();
+	EffectType newEffectType	= effect->GetEffectType();
+	EffectType newEffectOppType = effect->GetOppositeType();
 
-	for(auto& eff : m_Effects)
+	for(auto itr = m_Effects.begin(); itr != m_Effects.end();)
 	{
+		std::unique_ptr<Effect>& eff = *itr;
+		
 		if(eff->GetEffectType() == newEffectType)
-		{
 			eff->RefreshEffect(effect->TimeLeft());
 
-			return;
+		if(eff->GetEffectType() == newEffectOppType)
+		{
+			itr = m_Effects.erase(itr);
+
+			continue;
 		}
+
+		++itr;
 	}
 
 	effect->BindEffect(this);
@@ -172,7 +183,7 @@ void PlayerEntity::UpdateEffects(float dt)
 
 void PlayerEntity::UpdateIcons()
 {
-	for(int64_t i = 0; i < m_Effects.size(); ++i)
+	for(size_t i = 0; i < m_Effects.size(); ++i)
 		m_Effects[i]->SetIconPosition({ 32.0f * i + 1.0f, 1.0f });
 }
 

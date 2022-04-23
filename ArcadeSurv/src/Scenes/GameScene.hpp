@@ -12,7 +12,7 @@ class GameScene : public Scene
 {
 	public:
 		GameScene();
-		virtual ~GameScene() = default;
+		virtual ~GameScene();
 
 		virtual void HandleEvents(sf::Event& e)			override;
 		virtual void HandleInput(float dt)				override;
@@ -28,9 +28,15 @@ class GameScene : public Scene
 		void CheckForEnemiesToDespawn();
 		void CheckForEffectsToDespawn();
 
-		PlayerEntity m_Player;
+		std::unique_ptr<PlayerEntity> m_Player;
 
 		std::vector<EnemyEntity>  m_Enemies;
 		std::vector<BulletEntity> m_Bullets;
 		std::vector<EffectEntity> m_EffectHolders;
+
+		sf::RectangleShape m_Floor;
+
+		sf::Sound m_Ambient;
+		sf::Sound m_PickupSound;
+		sf::Sound m_EnemyDeathSound;
 };

@@ -94,7 +94,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;SFML_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;SFML_STATIC;AS_DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SFML\include</AdditionalIncludeDirectories>
@@ -130,7 +130,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;AS_DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SFML\include</AdditionalIncludeDirectories>
@@ -167,6 +167,7 @@
     <ClCompile Include="src\Effects\Effect.cpp" />
     <ClCompile Include="src\Effects\HasteEffect.cpp" />
     <ClCompile Include="src\Effects\QuadDmgEffect.cpp" />
+    <ClCompile Include="src\Effects\CrippleEffect.cpp" />
     <ClCompile Include="src\Entities\BulletEntity.cpp" />
     <ClCompile Include="src\Entities\EffectEntity.cpp" />
     <ClCompile Include="src\Entities\EnemyEntity.cpp" />
@@ -180,8 +181,10 @@
   <ItemGroup>
     <ClInclude Include="src\Application.hpp" />
     <ClInclude Include="src\Effects\Effect.hpp" />
+    <ClInclude Include="src\Effects\Effects.hpp" />
     <ClInclude Include="src\Effects\HasteEffect.hpp" />
     <ClInclude Include="src\Effects\QuadDmgEffect.hpp" />
+    <ClInclude Include="src\Effects\CrippleEffect.hpp" />
     <ClInclude Include="src\Entities\BulletEntity.hpp" />
     <ClInclude Include="src\Entities\EffectEntity.hpp" />
     <ClInclude Include="src\Entities\EnemyEntity.hpp" />

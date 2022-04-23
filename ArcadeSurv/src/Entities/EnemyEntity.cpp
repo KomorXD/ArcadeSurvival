@@ -2,9 +2,10 @@
 #include "PlayerEntity.hpp"
 
 EnemyEntity::EnemyEntity(GameScene* scene, PlayerEntity* playerPtr)
-	: Entity(scene, 75.0f), m_PlayerPtr(playerPtr)
+	: Entity(scene, 64.0f), m_PlayerPtr(playerPtr)
 {
 	m_Body.setTextureRect({ 0, 0, 32, 32 });
+	m_Body.setFillColor({ 0, 255, 0});
 }
 
 void EnemyEntity::Update(float dt)

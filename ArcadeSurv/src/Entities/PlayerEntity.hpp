@@ -5,6 +5,7 @@
 #include "../Effects/Effect.hpp"
 
 #include <vector>
+#include <SFML/Audio/Sound.hpp>
 
 class PlayerEntity : public Entity
 {
@@ -41,11 +42,13 @@ class PlayerEntity : public Entity
 
 		int32_t m_HP			  = 100;
 		int32_t m_InvulnFrames	  = 0;
-		int32_t m_FireRate		  = 10;
+		int32_t m_FireRate		  = 5;
 		int32_t m_FireFrames	  = 0;
 		int32_t m_AnimationFrames = 0;
 
 		float m_SpeedMultiplier    = 1.0f;
 		float m_DamageMultiplier   = 1.0f;
 		float m_FireRateMultiplier = 1.0f;
+
+		sf::Sound m_ShootingSound;
 };

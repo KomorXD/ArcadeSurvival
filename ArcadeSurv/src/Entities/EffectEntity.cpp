@@ -1,8 +1,7 @@
 #include "EffectEntity.hpp"
-#include "../Effects/HasteEffect.hpp"
-#include "../Effects/QuadDmgEffect.hpp"
 #include "PlayerEntity.hpp"
 #include "../Utils/Resources.hpp"
+#include "../Effects/Effects.hpp"
 
 EffectEntity::EffectEntity(GameScene* scene, const sf::Vector2f& pos, EffectType effectType, float duration, float entityLifespan)
 	: Entity(scene, 50.0f), m_Lifespan(entityLifespan)
@@ -10,14 +9,20 @@ EffectEntity::EffectEntity(GameScene* scene, const sf::Vector2f& pos, EffectType
 	switch(effectType)
 	{
 		case EffectType::HASTE:
-			m_StoredEffect = std::make_unique<HasteEffect>(duration, Resources::Get().textures.GetResource("effect_haste"));
-			SetTexture(Resources::Get().textures.GetResource("effect_haste"));
+			m_StoredEffect = std::make_unique<HasteEffect>(duration, Resources::Get().GetTexture("effect_haste"));
+			SetTexture(Resources::Get().GetTexture("effect_haste"));
 			
 			break;
 
+		case EffectType::CRIPPLE:
+			m_StoredEffect = std::make_unique<CrippleEffect>(duration, Resources::Get().GetTexture("effect_cripple"));
+			SetTexture(Resources::Get().GetTexture("effect_cripple"));
+			
+			break;
+			
 		case EffectType::QUAD:
-			m_StoredEffect = std::make_unique<QuadDmgEffect>(duration, Resources::Get().textures.GetResource("effect_quad"));
-			SetTexture(Resources::Get().textures.GetResource("effect_quad"));
+			m_StoredEffect = std::make_unique<QuadDmgEffect>(duration, Resources::Get().GetTexture("effect_quad"));
+			SetTexture(Resources::Get().GetTexture("effect_quad"));
 
 			break;
 

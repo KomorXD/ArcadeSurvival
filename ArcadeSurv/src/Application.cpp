@@ -53,6 +53,11 @@ void Application::SetWindowView(const sf::View& view)
 	m_Window.setView(view);
 }
 
+void Application::CloseWindow()
+{
+	m_Window.close();
+}
+
 void Application::Destroy()
 {
 	if(s_Instance)

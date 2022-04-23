@@ -6,7 +6,8 @@ enum class EffectType
 {
 	NONE,
 	QUAD,
-	HASTE
+	HASTE,
+	CRIPPLE
 };
 
 class PlayerEntity;
@@ -27,10 +28,12 @@ class Effect
 
 		virtual inline float TimeLeft() const { return m_TimeLeft; }
 		virtual inline EffectType GetEffectType() const { return m_Type; }
+		virtual inline EffectType GetOppositeType() const { return m_OppositeType; }
 
 	protected:
 		sf::Sprite	  m_Icon;
 		PlayerEntity* m_AffectedPlayer = nullptr;
 		EffectType	  m_Type		   = EffectType::NONE;
+		EffectType	  m_OppositeType   = EffectType::NONE;
 		float		  m_TimeLeft;
 };

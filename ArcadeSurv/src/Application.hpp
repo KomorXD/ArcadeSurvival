@@ -12,6 +12,7 @@ class Application
 		sf::RenderWindow& GetWindow();
 		void SetScene(Scene* scene);
 		void SetWindowView(const sf::View& view);
+		void CloseWindow();
 
 		inline sf::Vector2u GetWindowSize() const { return m_Window.getSize(); }
 

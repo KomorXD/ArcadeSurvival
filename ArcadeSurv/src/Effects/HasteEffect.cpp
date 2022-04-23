@@ -4,7 +4,8 @@
 HasteEffect::HasteEffect(float time, sf::Texture* icon)
 	: Effect(time, icon)
 {
-	m_Type = EffectType::HASTE;
+	m_Type		   = EffectType::HASTE;
+	m_OppositeType = EffectType::CRIPPLE;
 }
 
 HasteEffect::~HasteEffect()
