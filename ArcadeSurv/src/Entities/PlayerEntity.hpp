@@ -3,6 +3,7 @@
 #include "Enitity.hpp"
 #include "BulletEntity.hpp"
 #include "../Effects/Effect.hpp"
+#include "../UI/ResourceBar.hpp"
 
 #include <vector>
 #include <SFML/Audio/Sound.hpp>
@@ -15,6 +16,7 @@ class PlayerEntity : public Entity
 
 		virtual void Update(float dt) override;
 		virtual void Render(sf::RenderTarget& renderer) override;
+		virtual void SetPosition(const sf::Vector2f& pos) override;
 
 		void Input(float dt);
 		void OnDamage(int32_t damage, float dt);
@@ -25,6 +27,7 @@ class PlayerEntity : public Entity
 		
 		inline bool IsVulnerable() const { return m_InvulnFrames == 0; }
 		inline const sf::View& GetPlayerCameraView() const { return m_PlayerCameraView; }
+		inline const sf::View& GetInterfaceView() const { return m_InterfaceView; }
 
 	private:
 		void MovementInput();
@@ -51,4 +54,6 @@ class PlayerEntity : public Entity
 		float m_FireRateMultiplier = 1.0f;
 
 		sf::Sound m_ShootingSound;
+
+		ResourceBar m_hpBar;
 };

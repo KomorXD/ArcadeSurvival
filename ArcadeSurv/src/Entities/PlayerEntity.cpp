@@ -6,7 +6,7 @@
 #include <algorithm>
 
 PlayerEntity::PlayerEntity(GameScene* scene)
-	: Entity(scene, 64.0f), m_MoveDir({ 0.0f, 0.0f }), m_FacingDir({ 0.0f, 1.0f })
+	: Entity(scene, 64.0f), m_MoveDir({ 0.0f, 0.0f }), m_FacingDir({ 0.0f, 1.0f }), m_hpBar(&m_HP, { 500.0f, 16.0f }, { 10.0f, 15.0f })
 {
 	m_PlayerCameraView.setCenter(640.0f, 360.0f);
 	m_PlayerCameraView.setSize(1280.0f, 720.0f);
@@ -18,6 +18,8 @@ PlayerEntity::PlayerEntity(GameScene* scene)
 
 	m_ShootingSound.setBuffer(*Resources::Get().GetSoundBuffer("shoot"));
 	m_ShootingSound.setVolume(50.0f);
+
+	m_hpBar.SetColor(sf::Color::Red);
 }
 
 void PlayerEntity::Input(float dt)
@@ -184,7 +186,7 @@ void PlayerEntity::UpdateEffects(float dt)
 void PlayerEntity::UpdateIcons()
 {
 	for(size_t i = 0; i < m_Effects.size(); ++i)
-		m_Effects[i]->SetIconPosition({ 32.0f * i + 1.0f, 1.0f });
+		m_Effects[i]->SetIconPosition({ 35.0f * i + 750.0f, 8.0f });
 }
 
 void PlayerEntity::Update(float dt)
@@ -194,9 +196,11 @@ void PlayerEntity::Update(float dt)
 
 	UpdateAnimation(dt);
 	UpdateEffects(dt);
+	m_hpBar.Update();
 
 	m_Body.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
 	m_PlayerCameraView.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
+
 }
 
 void PlayerEntity::Render(sf::RenderTarget& renderer)
@@ -207,5 +211,13 @@ void PlayerEntity::Render(sf::RenderTarget& renderer)
 	for(auto& effect : m_Effects)
 		effect->RenderIcon(renderer);
 
+	m_hpBar.draw(renderer, sf::RenderStates::Default);
+
 	renderer.setView(m_PlayerCameraView);
+}
+
+void PlayerEntity::SetPosition(const sf::Vector2f& pos)
+{
+	m_Body.setPosition(pos);
+	m_PlayerCameraView.setCenter({ GetPosition().x + 16.0f, GetPosition().y + 16.0f });
 }

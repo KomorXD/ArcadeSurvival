@@ -17,17 +17,28 @@ static void LoadResources()
 	res.LoadTexture("effect_cripple");
 	res.LoadTexture("effect_quad");
 	res.LoadTexture("floor");
+	res.LoadTexture("sky");
 
 	res.LoadSoundBuffer("shoot");
 	res.LoadSoundBuffer("ambient");
 	res.LoadSoundBuffer("effect_pickup");
 	res.LoadSoundBuffer("enemy_death");
+
+	res.LoadFont("IBMPlexMonoRegular");
 }
 
 GameScene::GameScene()
 	: m_Floor({ 5000.0f, 5000.0f })
 {
 	LoadResources();
+
+	if(sf::Font* font = Resources::Get().GetFont("IBMPlexMonoRegular"))
+		m_TimeAliveText.setFont(*font);
+
+	m_TimeAliveText.setString("00:00:00");
+	m_TimeAliveText.setPosition({ Application::GetInstance().GetWindow().getSize().x / 2.0f, 5.0f });
+
+	m_TimeAliveText.move({ -m_TimeAliveText.getLocalBounds().width / 2.0f, 0.0f });
 
 	m_Player = std::make_unique<PlayerEntity>(this);
 
@@ -36,6 +47,12 @@ GameScene::GameScene()
 
 	if(sf::Texture* tex = Resources::Get().GetTexture("player_atlas"))
 		m_Player->SetTexture(tex);
+
+	if(sf::Texture* tex = Resources::Get().GetTexture("sky"))
+	{
+		m_Skybox.setTexture(*tex);
+		m_Skybox.scale({ 5.0f, 2.8125f });
+	}
 
 	m_Floor.setOrigin({ 2500.0f, 2500.0f });
 	m_Floor.setPosition({ 640.0f, 360.0f });
@@ -96,11 +113,14 @@ GameScene::~GameScene()
 	res.DeleteTexture("effect_cripple");
 	res.DeleteTexture("effect_quad");
 	res.DeleteTexture("floor");
+	res.DeleteTexture("sky");
 
 	res.DeleteSoundBuffer("shoot");
 	res.DeleteSoundBuffer("ambient");
 	res.DeleteSoundBuffer("effect_pickup");
 	res.DeleteSoundBuffer("enemy_death");
+
+	res.DeleteFont("IBMPlexMonoRegular");
 }
 
 void GameScene::HandleEvents(sf::Event& e)
@@ -125,12 +145,29 @@ static std::future<void> bulletsUpdateFuture;
 static std::future<void> enemiesUpdateFuture;
 static std::future<void> effectsUpdateFuture;
 
+static std::string GetFormattedTime(float secondsPassed)
+{
+	int32_t minutes = static_cast<int32_t>(secondsPassed) / 60;
+	int32_t seconds = static_cast<int32_t>(secondsPassed) % 60;
+	
+	secondsPassed -= 60.0f * minutes + seconds;
+
+	int32_t miliseconds = static_cast<int32_t>(secondsPassed * 100.0f);
+
+	std::string minutesStr	   = minutes < 10	  ? "0" + std::to_string(minutes)	  : std::to_string(minutes);
+	std::string secondsStr	   = seconds < 10	  ? "0" + std::to_string(seconds)	  : std::to_string(seconds);
+	std::string milisecondsStr = miliseconds < 10 ? "0" + std::to_string(miliseconds) : std::to_string(miliseconds);
+
+	return minutesStr + ":" + secondsStr + ":" + milisecondsStr;
+}
+
 void GameScene::Update(float dt)
 {
 	CheckForPlayerCollisions(dt);
 	
 	m_Player->Update(dt);
-	
+
+	CheckForPlayerOutsideOfArena();
 	CheckForEnemiesShot();
 	CheckForEnemiesToDespawn();
 	CheckForBulletsToDespawn();
@@ -139,10 +176,14 @@ void GameScene::Update(float dt)
 	enemiesUpdateFuture = std::async(std::launch::async, UpdateEntities<EnemyEntity>,  std::ref<std::vector<EnemyEntity>>(m_Enemies),		 dt);
 	bulletsUpdateFuture = std::async(std::launch::async, UpdateEntities<BulletEntity>, std::ref<std::vector<BulletEntity>>(m_Bullets),		 dt);
 	effectsUpdateFuture = std::async(std::launch::async, UpdateEntities<EffectEntity>, std::ref<std::vector<EffectEntity>>(m_EffectHolders), dt);
+
+	m_TimeAliveText.setString(GetFormattedTime(m_Clock.getElapsedTime().asSeconds()));
 }
 
 void GameScene::Render(sf::RenderTarget& renderer)
 {
+	renderer.draw(m_Skybox);
+
 	Application::GetInstance().SetWindowView(m_Player->GetPlayerCameraView());
 
 	renderer.draw(m_Floor);
@@ -157,6 +198,10 @@ void GameScene::Render(sf::RenderTarget& renderer)
 		effect.Render(renderer);
 
 	m_Player->Render(renderer);
+
+	Application::GetInstance().SetWindowView(m_Player->GetInterfaceView());
+
+	renderer.draw(m_TimeAliveText);
 }
 
 void GameScene::SpawnBullet(const sf::Vector2f& dir, const sf::Vector2f& pos, float velocity, float strength)
@@ -191,6 +236,26 @@ void GameScene::CheckForPlayerCollisions(float dt)
 			break;
 		}
 	}
+}
+
+void GameScene::CheckForPlayerOutsideOfArena()
+{
+	sf::Vector2f  playerPos		  = m_Player->GetPosition();
+	sf::FloatRect arenaBoundaries = m_Floor.getGlobalBounds();
+
+	if(playerPos.x - 32.0f < arenaBoundaries.left)
+		playerPos.x = arenaBoundaries.left + 32.0f;
+
+	if(playerPos.y - 32.0f < arenaBoundaries.top)
+		playerPos.y = arenaBoundaries.top + 32.0f;
+
+	if(playerPos.x + 32.0f > arenaBoundaries.left + arenaBoundaries.width)
+		playerPos.x = arenaBoundaries.left + arenaBoundaries.width - 32.0f;
+	
+	if(playerPos.y + 32.0f > arenaBoundaries.top + arenaBoundaries.height)
+		playerPos.y = arenaBoundaries.top + arenaBoundaries.height - 32.0f;
+
+	m_Player->SetPosition(playerPos);
 }
 
 void GameScene::CheckForEnemiesShot()

@@ -23,6 +23,7 @@ class GameScene : public Scene
 
 	private:
 		void CheckForPlayerCollisions(float dt);
+		void CheckForPlayerOutsideOfArena();
 		void CheckForEnemiesShot();
 		void CheckForBulletsToDespawn();
 		void CheckForEnemiesToDespawn();
@@ -35,8 +36,12 @@ class GameScene : public Scene
 		std::vector<EffectEntity> m_EffectHolders;
 
 		sf::RectangleShape m_Floor;
+		sf::Sprite		   m_Skybox;
 
 		sf::Sound m_Ambient;
 		sf::Sound m_PickupSound;
 		sf::Sound m_EnemyDeathSound;
+
+		sf::Clock m_Clock;
+		sf::Text  m_TimeAliveText;
 };
