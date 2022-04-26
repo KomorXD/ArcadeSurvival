@@ -168,7 +168,7 @@
     <ClCompile Include="src\Effects\HasteEffect.cpp" />
     <ClCompile Include="src\Effects\QuadDmgEffect.cpp" />
     <ClCompile Include="src\Effects\CrippleEffect.cpp" />
-    <ClCompile Include="src\Entities\BulletEntity.cpp" />
+    <ClCompile Include="src\Entities\Bullets\BulletEntity.cpp" />
     <ClCompile Include="src\Entities\EffectEntity.cpp" />
     <ClCompile Include="src\Entities\EnemyEntity.cpp" />
     <ClCompile Include="src\Entities\Entity.cpp" />
@@ -186,7 +186,7 @@
     <ClInclude Include="src\Effects\HasteEffect.hpp" />
     <ClInclude Include="src\Effects\QuadDmgEffect.hpp" />
     <ClInclude Include="src\Effects\CrippleEffect.hpp" />
-    <ClInclude Include="src\Entities\BulletEntity.hpp" />
+    <ClInclude Include="src\Entities\Bullets\BulletEntity.hpp" />
     <ClInclude Include="src\Entities\EffectEntity.hpp" />
     <ClInclude Include="src\Entities\EnemyEntity.hpp" />
     <ClInclude Include="src\Entities\Enitity.hpp" />

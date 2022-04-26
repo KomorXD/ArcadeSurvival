@@ -39,7 +39,7 @@
     <ClCompile Include="src\Utils\Resources.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\BulletEntity.cpp">
+    <ClCompile Include="src\Entities\Bullets\BulletEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Effects\Effect.cpp">
@@ -89,7 +89,7 @@
     <ClInclude Include="src\Utils\Resources.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\BulletEntity.hpp">
+    <ClInclude Include="src\Entities\Bullets\BulletEntity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Effects\Effect.hpp">

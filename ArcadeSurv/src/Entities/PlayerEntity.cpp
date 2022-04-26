@@ -16,8 +16,17 @@ PlayerEntity::PlayerEntity(GameScene* scene)
 	
 	m_Body.setTextureRect({ 0, 0, 32, 32 });
 
-	m_ShootingSound.setBuffer(*Resources::Get().GetSoundBuffer("shoot"));
-	m_ShootingSound.setVolume(50.0f);
+	if(sf::SoundBuffer* sb = Resources::Get().GetSoundBuffer("shoot"))
+	{
+		m_ShootingSound.setBuffer(*sb);
+		m_ShootingSound.setVolume(50.0f);
+	}
+
+	if(sf::SoundBuffer* sb = Resources::Get().GetSoundBuffer("player_hurt"))
+	{
+		m_HurtSound.setBuffer(*sb);
+		m_HurtSound.setVolume(50.0f);
+	}
 
 	m_hpBar.SetColor(sf::Color::Red);
 }
@@ -39,7 +48,9 @@ void PlayerEntity::Input(float dt)
 void PlayerEntity::OnDamage(int32_t damage, float dt)
 {
 	m_HP = std::max(m_HP - damage, 0);
-	m_InvulnFrames = static_cast<int32_t>(1 / dt);
+	m_InvulnFrames = static_cast<int32_t>(0.5f / dt);
+
+	m_HurtSound.play();
 }
 
 void PlayerEntity::SetSpeedMultiplier(float mul)

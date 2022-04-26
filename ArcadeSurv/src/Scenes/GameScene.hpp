@@ -2,7 +2,7 @@
 
 #include "Scene.hpp"
 #include "../Entities/PlayerEntity.hpp"
-#include "../Entities/BulletEntity.hpp"
+#include "../Entities/Bullets/BulletEntity.hpp"
 #include "../Entities/EnemyEntity.hpp"
 #include "../Entities/EffectEntity.hpp"
 

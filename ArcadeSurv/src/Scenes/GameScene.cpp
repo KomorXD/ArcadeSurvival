@@ -23,6 +23,7 @@ static void LoadResources()
 	res.LoadSoundBuffer("ambient");
 	res.LoadSoundBuffer("effect_pickup");
 	res.LoadSoundBuffer("enemy_death");
+	res.LoadSoundBuffer("player_hurt");
 
 	res.LoadFont("IBMPlexMonoRegular");
 }
@@ -119,6 +120,7 @@ GameScene::~GameScene()
 	res.DeleteSoundBuffer("ambient");
 	res.DeleteSoundBuffer("effect_pickup");
 	res.DeleteSoundBuffer("enemy_death");
+	res.DeleteSoundBuffer("player_hurt");
 
 	res.DeleteFont("IBMPlexMonoRegular");
 }

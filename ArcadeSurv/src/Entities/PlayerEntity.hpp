@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Enitity.hpp"
-#include "BulletEntity.hpp"
+#include "Bullets/BulletEntity.hpp"
 #include "../Effects/Effect.hpp"
 #include "../UI/ResourceBar.hpp"
 
@@ -38,6 +38,8 @@ class PlayerEntity : public Entity
 
 		std::vector<std::unique_ptr<Effect>> m_Effects;
 
+		
+
 		sf::Vector2f m_MoveDir;
 		sf::Vector2f m_FacingDir;
 		sf::View	 m_PlayerCameraView;
@@ -54,6 +56,7 @@ class PlayerEntity : public Entity
 		float m_FireRateMultiplier = 1.0f;
 
 		sf::Sound m_ShootingSound;
+		sf::Sound m_HurtSound;
 
 		ResourceBar m_hpBar;
 };

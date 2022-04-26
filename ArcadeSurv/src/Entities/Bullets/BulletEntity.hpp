@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Enitity.hpp"
+#include "../Enitity.hpp"
 
 class BulletEntity : public Entity
 {
@@ -15,5 +15,5 @@ class BulletEntity : public Entity
 
 	private:
 		sf::Vector2f m_TravelDir;
-		float m_Strength;
+		float		 m_Strength;
 };
