@@ -38,8 +38,6 @@ class PlayerEntity : public Entity
 
 		std::vector<std::unique_ptr<Effect>> m_Effects;
 
-		
-
 		sf::Vector2f m_MoveDir;
 		sf::Vector2f m_FacingDir;
 		sf::View	 m_PlayerCameraView;

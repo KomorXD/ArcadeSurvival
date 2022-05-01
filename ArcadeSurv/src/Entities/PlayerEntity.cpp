@@ -38,7 +38,10 @@ void PlayerEntity::Input(float dt)
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && m_FireFrames == 0)
 	{
+		constexpr float two_pi_part = 2.0f * 3.14159274101257324219f / 8.0f;
+
 		m_Scene->SpawnBullet(m_FacingDir, GetPosition(), 500.0f, 10.0f * m_DamageMultiplier);
+
 		m_FireFrames = static_cast<int32_t>((1 / dt) / (m_FireRate * m_FireRateMultiplier));
 
 		m_ShootingSound.play();
