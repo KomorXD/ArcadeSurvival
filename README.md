@@ -1,2 +1,2 @@
 # ArcadeSurvival
-lel Xd
+An uni project
