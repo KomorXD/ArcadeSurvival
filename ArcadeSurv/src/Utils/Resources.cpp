@@ -56,10 +56,10 @@ bool Resources::DeleteTexture(const std::string& name)
 
 bool Resources::DeleteSoundBuffer(const std::string& name)
 {
-	return m_SoundBuffers.LoadResource(name);
+	return m_SoundBuffers.EraseResource(name);
 }
 
 bool Resources::DeleteFont(const std::string& name)
 {
-	return m_Fonts.LoadResource(name);
+	return m_Fonts.EraseResource(name);
 }
