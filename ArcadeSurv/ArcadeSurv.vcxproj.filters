@@ -39,7 +39,7 @@
     <ClCompile Include="src\Utils\Resources.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Bullets\BulletEntity.cpp">
+    <ClCompile Include="src\Entities\BulletEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Effects\Effect.cpp">
@@ -58,6 +58,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\UI\ResourceBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WeaponTypes\BasicWeapon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WeaponTypes\SpreadWeapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,7 +95,7 @@
     <ClInclude Include="src\Utils\Resources.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Bullets\BulletEntity.hpp">
+    <ClInclude Include="src\Entities\BulletEntity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Effects\Effect.hpp">
@@ -111,6 +117,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\UI\ResourceBar.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WeaponTypes\Weapon.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WeaponTypes\BasicWeapon.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WeaponTypes\Weapons.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WeaponTypes\SpreadWeapon.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

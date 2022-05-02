@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Enitity.hpp"
+#include "Enitity.hpp"
 
 class BulletEntity : public Entity
 {

@@ -168,7 +168,7 @@
     <ClCompile Include="src\Effects\HasteEffect.cpp" />
     <ClCompile Include="src\Effects\QuadDmgEffect.cpp" />
     <ClCompile Include="src\Effects\CrippleEffect.cpp" />
-    <ClCompile Include="src\Entities\Bullets\BulletEntity.cpp" />
+    <ClCompile Include="src\Entities\BulletEntity.cpp" />
     <ClCompile Include="src\Entities\EffectEntity.cpp" />
     <ClCompile Include="src\Entities\EnemyEntity.cpp" />
     <ClCompile Include="src\Entities\Entity.cpp" />
@@ -178,6 +178,8 @@
     <ClCompile Include="src\UI\ResourceBar.cpp" />
     <ClCompile Include="src\Utils\Random.cpp" />
     <ClCompile Include="src\Utils\Resources.cpp" />
+    <ClCompile Include="src\WeaponTypes\BasicWeapon.cpp" />
+    <ClCompile Include="src\WeaponTypes\SpreadWeapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp" />
@@ -186,7 +188,7 @@
     <ClInclude Include="src\Effects\HasteEffect.hpp" />
     <ClInclude Include="src\Effects\QuadDmgEffect.hpp" />
     <ClInclude Include="src\Effects\CrippleEffect.hpp" />
-    <ClInclude Include="src\Entities\Bullets\BulletEntity.hpp" />
+    <ClInclude Include="src\Entities\BulletEntity.hpp" />
     <ClInclude Include="src\Entities\EffectEntity.hpp" />
     <ClInclude Include="src\Entities\EnemyEntity.hpp" />
     <ClInclude Include="src\Entities\Enitity.hpp" />
@@ -197,6 +199,10 @@
     <ClInclude Include="src\Utils\Random.hpp" />
     <ClInclude Include="src\Utils\ResourceManager.hpp" />
     <ClInclude Include="src\Utils\Resources.hpp" />
+    <ClInclude Include="src\WeaponTypes\BasicWeapon.hpp" />
+    <ClInclude Include="src\WeaponTypes\SpreadWeapon.hpp" />
+    <ClInclude Include="src\WeaponTypes\Weapon.hpp" />
+    <ClInclude Include="src\WeaponTypes\Weapons.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

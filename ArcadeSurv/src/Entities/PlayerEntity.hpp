@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Enitity.hpp"
-#include "Bullets/BulletEntity.hpp"
+#include "BulletEntity.hpp"
 #include "../Effects/Effect.hpp"
 #include "../UI/ResourceBar.hpp"
+#include "../WeaponTypes/Weapon.hpp"
 
 #include <vector>
 #include <SFML/Audio/Sound.hpp>
@@ -16,8 +17,8 @@ class PlayerEntity : public Entity
 		PlayerEntity(GameScene* scene, const sf::Vector2f& pos = { 0.0f, 0.0f });
 		virtual ~PlayerEntity() = default;
 
-		virtual void Update(float dt) override;
-		virtual void Render(sf::RenderTarget& renderer) override;
+		virtual void Update(float dt)					  override;
+		virtual void Render(sf::RenderTarget& renderer)	  override;
 		virtual void SetPosition(const sf::Vector2f& pos) override;
 
 		void Input(float dt);
@@ -27,6 +28,7 @@ class PlayerEntity : public Entity
 		void SetDamageMultiplier(float mul);
 		void SetFireRateMultiplier(float mul);
 		void SetMovementSpeed(float ms);
+		void SetWeaponType(std::unique_ptr<Weapon>&& type);
 
 		void ApplyEffect(std::unique_ptr<Effect>&& effect);
 		
@@ -41,7 +43,9 @@ class PlayerEntity : public Entity
 		void UpdateEffects(float dt);
 		void UpdateIcons();
 
-		GameScene* m_Scene;
+		GameScene*  m_Scene;
+
+		std::unique_ptr<Weapon> m_UsedWeaponType;
 
 		std::vector<std::unique_ptr<Effect>> m_Effects;
 

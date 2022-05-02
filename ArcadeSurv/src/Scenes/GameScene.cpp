@@ -3,6 +3,7 @@
 #include "../Utils/Resources.hpp"
 #include "../Effects/Effects.hpp"
 #include "../Utils/Random.hpp"
+#include "../WeaponTypes/Weapons.hpp"
 
 #include <future>
 
@@ -45,6 +46,7 @@ GameScene::GameScene()
 
 	m_Player->SetPosition({ 640.0f, 360.0f });
 	m_Player->SetMovementSpeed(200.0f);
+	m_Player->SetWeaponType(std::make_unique<SpreadWeapon>());
 
 	if(sf::Texture* tex = Resources::Get().GetTexture("player_atlas"))
 		m_Player->SetTexture(tex);
@@ -83,7 +85,7 @@ GameScene::GameScene()
 	m_EffectHolders.emplace_back(EffectType::CRIPPLE, 10.0f, 100.0f, sf::Vector2f(700.0f, 200.0f));
 
 	for(auto& ef : m_EffectHolders)
-		ef.SetSize({ 32.0f, 32.0f });
+		ef.SetSize({ 48.0f, 48.0f });
 
 	if(sf::SoundBuffer* sb = Resources::Get().GetSoundBuffer("ambient"))
 	{
