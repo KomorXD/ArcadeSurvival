@@ -1,13 +1,14 @@
 #include "Enitity.hpp"
 
-Entity::Entity(GameScene* scene, float size)
-	: m_Scene(scene), m_Body({ size, size }), m_MovementSpeed(100.0f)
+Entity::Entity(const sf::Vector2f& pos)
 {
 #ifdef AS_DEBUG
 	m_Body.setOutlineThickness(1.0f);
 	m_Body.setOutlineColor(sf::Color::Red);
 #endif
-	m_Body.setOrigin({ size / 2.0f, size / 2.0f });
+	m_Body.setPosition(pos);
+	m_Body.setSize({ 64.0f, 64.0f });
+	m_Body.setOrigin({ 32.0f, 32.0f });
 }
 
 void Entity::Render(sf::RenderTarget& renderer)
@@ -25,7 +26,8 @@ void Entity::SetPosition(const sf::Vector2f& pos)
 	m_Body.setPosition(pos);
 }
 
-void Entity::SetMovementSpeed(float ms)
+void Entity::SetSize(const sf::Vector2f& size)
 {
-	m_MovementSpeed = ms;
+	m_Body.setSize(size);
+	m_Body.setOrigin({ size.x / 2.0f, size.y / 2.0f });
 }

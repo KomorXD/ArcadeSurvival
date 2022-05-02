@@ -1,8 +1,8 @@
 #include "EnemyEntity.hpp"
 #include "PlayerEntity.hpp"
 
-EnemyEntity::EnemyEntity(GameScene* scene, PlayerEntity* playerPtr)
-	: Entity(scene, 64.0f), m_PlayerPtr(playerPtr)
+EnemyEntity::EnemyEntity(PlayerEntity* playerPtr, const sf::Vector2f& pos)
+	: Entity(pos), m_PlayerPtr(playerPtr)
 {
 	m_Body.setTextureRect({ 0, 0, 32, 32 });
 	m_Body.setFillColor({ 0, 255, 0});
@@ -38,4 +38,9 @@ void EnemyEntity::Render(sf::RenderTarget& renderer)
 void EnemyEntity::OnDamage(int32_t damage)
 {
 	m_HP = std::max(0, m_HP - damage);
+}
+
+void EnemyEntity::SetMovementSpeed(float ms)
+{
+	m_MovementSpeed = ms;
 }

@@ -2,12 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 
-class GameScene;
-
 class Entity
 {
 	public:
-		Entity(GameScene* scene, float size);
+		Entity(const sf::Vector2f& pos = { 0.0f, 0.0f });
 		virtual ~Entity() = default;
 
 		virtual void Update(float dt)					= 0;
@@ -15,14 +13,11 @@ class Entity
 
 		virtual void SetTexture(sf::Texture* texture);
 		virtual void SetPosition(const sf::Vector2f& pos);
-		virtual void SetMovementSpeed(float ms);
+		virtual void SetSize(const sf::Vector2f& size);
 
 		virtual inline sf::FloatRect GetCollider() const { return m_Body.getGlobalBounds(); }
 		virtual inline sf::Vector2f GetPosition() const { return m_Body.getPosition(); }
 
 	protected:
-		GameScene* m_Scene;
-
 		sf::RectangleShape m_Body;
-		float m_MovementSpeed;
 };

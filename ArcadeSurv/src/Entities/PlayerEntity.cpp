@@ -5,12 +5,12 @@
 #include <ranges>
 #include <algorithm>
 
-PlayerEntity::PlayerEntity(GameScene* scene)
-	: Entity(scene, 64.0f), m_MoveDir({ 0.0f, 0.0f }), m_FacingDir({ 0.0f, 1.0f }), m_hpBar(&m_HP, { 500.0f, 16.0f }, { 10.0f, 15.0f })
+PlayerEntity::PlayerEntity(GameScene* scene, const sf::Vector2f& pos)
+	: Entity(pos), m_Scene(scene), m_hpBar(&m_HP, { 500.0f, 16.0f }, { 10.0f, 15.0f })
 {
 	m_PlayerCameraView.setCenter(640.0f, 360.0f);
 	m_PlayerCameraView.setSize(1280.0f, 720.0f);
-
+	
 	m_InterfaceView.setCenter(640.0f, 360.0f);
 	m_InterfaceView.setSize(1280.0f, 720.0f);
 	
@@ -69,6 +69,11 @@ void PlayerEntity::SetDamageMultiplier(float mul)
 void PlayerEntity::SetFireRateMultiplier(float mul)
 {
 	m_FireRateMultiplier = mul;
+}
+
+void PlayerEntity::SetMovementSpeed(float ms)
+{
+	m_MovementSpeed = ms;
 }
 
 void PlayerEntity::ApplyEffect(std::unique_ptr<Effect>&& effect)
@@ -200,7 +205,7 @@ void PlayerEntity::UpdateEffects(float dt)
 void PlayerEntity::UpdateIcons()
 {
 	for(size_t i = 0; i < m_Effects.size(); ++i)
-		m_Effects[i]->SetIconPosition({ 35.0f * i + 750.0f, 8.0f });
+		m_Effects[i]->SetIconPosition({ 35.0f * i + 730.0f, 8.0f });
 }
 
 void PlayerEntity::Update(float dt)
@@ -214,7 +219,6 @@ void PlayerEntity::Update(float dt)
 
 	m_Body.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
 	m_PlayerCameraView.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
-
 }
 
 void PlayerEntity::Render(sf::RenderTarget& renderer)

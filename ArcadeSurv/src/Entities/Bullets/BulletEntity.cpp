@@ -1,19 +1,32 @@
 #include "BulletEntity.hpp"
 
-BulletEntity::BulletEntity(GameScene* scene, const sf::Vector2f& dir, const sf::Vector2f& pos, float travelSpeed, float strength)
-	: Entity(scene, 10.0f), m_TravelDir(dir), m_Strength(strength)
+BulletEntity::BulletEntity(const sf::Vector2f& pos)
+	: Entity(pos)
 {
-	m_MovementSpeed = travelSpeed;
-	
-	m_Body.setPosition(pos);
+	;
 }
 
 void BulletEntity::Update(float dt)
 {
-	m_Body.move(m_TravelDir * m_MovementSpeed * dt);
+	m_Body.move(m_TravelDir * m_TravelSpeed * dt);
 }
 
 void BulletEntity::Render(sf::RenderTarget& renderer)
 {
 	renderer.draw(m_Body);
+}
+
+void BulletEntity::SetTravelSpeed(float ts)
+{
+	m_TravelSpeed = ts;
+}
+
+void BulletEntity::SetStrength(float strength)
+{
+	m_Strength = strength;
+}
+
+void BulletEntity::SetVelocityVector(const sf::Vector2f& velVec)
+{
+	m_TravelDir = velVec;
 }

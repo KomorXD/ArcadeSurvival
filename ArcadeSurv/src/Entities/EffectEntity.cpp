@@ -3,8 +3,8 @@
 #include "../Utils/Resources.hpp"
 #include "../Effects/Effects.hpp"
 
-EffectEntity::EffectEntity(GameScene* scene, const sf::Vector2f& pos, EffectType effectType, float duration, float entityLifespan)
-	: Entity(scene, 50.0f), m_Lifespan(entityLifespan)
+EffectEntity::EffectEntity(EffectType effectType, float duration, float entityLifespan, const sf::Vector2f& pos)
+	: Entity(pos), m_Lifespan(entityLifespan)
 {
 	switch(effectType)
 	{
@@ -31,12 +31,10 @@ EffectEntity::EffectEntity(GameScene* scene, const sf::Vector2f& pos, EffectType
 	}
 
 	m_Body.setPosition(pos);
-
-	SetMovementSpeed(0.0f);
 }
 
 EffectEntity::EffectEntity(EffectEntity&& other) noexcept
-	: Entity(other.m_Scene, other.m_MovementSpeed)
+	: Entity(other.m_Body.getSize())
 {
 	*this = std::move(other);
 }

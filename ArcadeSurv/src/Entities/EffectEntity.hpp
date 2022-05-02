@@ -6,10 +6,10 @@
 class EffectEntity : public Entity
 {
 	public:
-		EffectEntity(GameScene* scene, const sf::Vector2f& pos, EffectType effectType, float effectDuration, float entityLifespan);
+		EffectEntity(EffectType effectType, float effectDuration, float entityLifespan, const sf::Vector2f& pos = { 0.0f, 0.0f });
 		EffectEntity(EffectEntity&& other) noexcept;
 		virtual ~EffectEntity() = default;
-
+		
 		EffectEntity& operator= (EffectEntity&& other) noexcept;
 
 		virtual void Update(float dt) override;

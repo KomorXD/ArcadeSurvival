@@ -39,7 +39,7 @@ GameScene::GameScene()
 	m_TimeAliveText.setString("00:00:00");
 	m_TimeAliveText.setPosition({ Application::GetInstance().GetWindow().getSize().x / 2.0f, 5.0f });
 
-	m_TimeAliveText.move({ -m_TimeAliveText.getLocalBounds().width / 2.0f, 0.0f });
+	m_TimeAliveText.move({ -m_TimeAliveText.getLocalBounds().width / 1.6f, 0.0f});
 
 	m_Player = std::make_unique<PlayerEntity>(this);
 
@@ -65,7 +65,7 @@ GameScene::GameScene()
 		m_Floor.setTextureRect({ 0, 0, 2500, 2500 });
 	}
 
-	EnemyEntity prototype(this, m_Player.get());
+	EnemyEntity prototype(m_Player.get());
 	
 	if(sf::Texture* tex = Resources::Get().GetTexture("enemy_atlas"))
 		prototype.SetTexture(tex);
@@ -78,9 +78,12 @@ GameScene::GameScene()
 		m_Enemies.push_back(prototype);
 	}
 
-	m_EffectHolders.emplace_back(this, sf::Vector2f(200.0f, 200.0f), EffectType::HASTE,	  10.0f, 100.0f);
-	m_EffectHolders.emplace_back(this, sf::Vector2f(100.0f, 600.0f), EffectType::QUAD,	  10.0f, 100.0f);
-	m_EffectHolders.emplace_back(this, sf::Vector2f(700.0f, 200.0f), EffectType::CRIPPLE, 10.0f, 100.0f);
+	m_EffectHolders.emplace_back(EffectType::HASTE,	  10.0f, 100.0f, sf::Vector2f(200.0f, 200.0f));
+	m_EffectHolders.emplace_back(EffectType::QUAD,	  10.0f, 100.0f, sf::Vector2f(100.0f, 600.0f));
+	m_EffectHolders.emplace_back(EffectType::CRIPPLE, 10.0f, 100.0f, sf::Vector2f(700.0f, 200.0f));
+
+	for(auto& ef : m_EffectHolders)
+		ef.SetSize({ 32.0f, 32.0f });
 
 	if(sf::SoundBuffer* sb = Resources::Get().GetSoundBuffer("ambient"))
 	{
@@ -208,8 +211,15 @@ void GameScene::Render(sf::RenderTarget& renderer)
 
 void GameScene::SpawnBullet(const sf::Vector2f& dir, const sf::Vector2f& pos, float velocity, float strength)
 {
-	m_Bullets.emplace_back(this, dir, pos, velocity, strength);
-	m_Bullets.back().SetTexture(Resources::Get().GetTexture("basic_bullet"));
+	m_Bullets.emplace_back(pos);
+
+	BulletEntity& bullet = m_Bullets.back();
+
+	bullet.SetTexture(Resources::Get().GetTexture("basic_bullet"));
+	bullet.SetSize({ 16.0f, 16.0f });
+	bullet.SetVelocityVector(dir);
+	bullet.SetTravelSpeed(velocity);
+	bullet.SetStrength(strength);
 }
 
 void GameScene::CheckForPlayerCollisions(float dt)
