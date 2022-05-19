@@ -23,6 +23,7 @@ class PlayerEntity : public Entity
 
 		void Input(float dt);
 		void OnDamage(int32_t damage, float dt);
+		void OnEnemyKilled();
 
 		void SetSpeedMultiplier(float mul);
 		void SetDamageMultiplier(float mul);
@@ -43,7 +44,7 @@ class PlayerEntity : public Entity
 		void UpdateEffects(float dt);
 		void UpdateIcons();
 
-		GameScene*  m_Scene;
+		GameScene* m_Scene;
 
 		std::unique_ptr<Weapon> m_UsedWeaponType;
 
@@ -56,6 +57,7 @@ class PlayerEntity : public Entity
 		sf::Vector2f m_FacingDir = { 0.0f, 1.0f };
 
 		int32_t m_HP			  = 100;
+		int32_t m_KillCount		  = 0;
 		int32_t m_InvulnFrames	  = 0;
 		int32_t m_FireRate		  = 5;
 		int32_t m_FireFrames	  = 0;
@@ -71,4 +73,5 @@ class PlayerEntity : public Entity
 		sf::Sound m_HurtSound;
 
 		ResourceBar m_hpBar;
+		ResourceBar m_UltBar;
 };

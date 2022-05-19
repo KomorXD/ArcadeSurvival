@@ -12,7 +12,7 @@ void Application::Run()
 	{
 		while(m_Window.pollEvent(ev))
 		{
-			m_Scene->HandleEvents(ev);
+			m_Scenes.top()->HandleEvents(ev);
 
 			if(ev.type == sf::Event::Closed)
 				m_Window.close();
@@ -20,14 +20,30 @@ void Application::Run()
 
 		m_Window.clear({ 66, 66, 66 });
 
-		m_Scene->HandleInput(dt);
-		m_Scene->Update(dt);
-		m_Scene->Render(m_Window);
+		m_Scenes.top()->HandleInput(dt);
+		m_Scenes.top()->Update(dt);
+		m_Scenes.top()->Render(m_Window);
 
 		m_Window.display();
 
 		dt = std::min(timer.restart().asSeconds(), 1.0f / 30.0f);
 	}
+}
+
+void Application::PushScene(std::unique_ptr<Scene>&& scene)
+{
+	m_Scenes.push(std::move(scene));
+}
+
+void Application::ChangeScene(std::unique_ptr<Scene>&& scene)
+{
+	m_Scenes.pop();
+	m_Scenes.push(std::move(scene));
+}
+
+void Application::PopScene()
+{
+	m_Scenes.pop();
 }
 
 sf::RenderWindow& Application::GetWindow()
@@ -41,11 +57,6 @@ void Application::Init(uint32_t width, uint32_t height, const char* title)
 		return;
 
 	s_Instance = new Application(width, height, title);
-}
-
-void Application::SetScene(Scene* scene)
-{
-	m_Scene = scene;
 }
 
 void Application::SetWindowView(const sf::View& view)
@@ -72,5 +83,6 @@ Application::Application(uint32_t width, uint32_t height, const char* title)
 
 Application::~Application()
 {
-	delete m_Scene;
+	while(!m_Scenes.empty())
+		m_Scenes.pop();
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <stack>
 
 class Scene;
 
@@ -9,8 +10,11 @@ class Application
 	public:
 		void Run();
 
+		void PushScene(std::unique_ptr<Scene>&& scene);
+		void ChangeScene(std::unique_ptr<Scene>&& scene);
+		void PopScene();
+
 		sf::RenderWindow& GetWindow();
-		void SetScene(Scene* scene);
 		void SetWindowView(const sf::View& view);
 		void CloseWindow();
 
@@ -25,8 +29,8 @@ class Application
 		Application(uint32_t width, uint32_t height, const char* title);
 		~Application();
 		
-		sf::RenderWindow m_Window;
-		Scene* m_Scene = nullptr;
+		sf::RenderWindow  m_Window;
+		std::stack<std::unique_ptr<Scene>> m_Scenes;
 
 		static inline Application* s_Instance;
 };

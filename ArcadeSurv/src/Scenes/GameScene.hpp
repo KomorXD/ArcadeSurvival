@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene.hpp"
+#include "../WavesManager.hpp"
 #include "../Entities/PlayerEntity.hpp"
 #include "../Entities/BulletEntity.hpp"
 #include "../Entities/EnemyEntity.hpp"
@@ -19,7 +20,8 @@ class GameScene : public Scene
 		virtual void Update(float dt)					override;
 		virtual void Render(sf::RenderTarget& renderer) override;
 
-		void SpawnBullet(const sf::Vector2f& dir, const sf::Vector2f& pos, float velocity, float strength);
+		void SpawnBullet(BulletEntity bullet);
+		void SpawnEnemy(const sf::Vector2f& pos, const sf::Color& color, float strength, float movementSpeed);
 
 	private:
 		void CheckForPlayerCollisions(float dt);
@@ -30,6 +32,8 @@ class GameScene : public Scene
 		void CheckForEffectsToDespawn();
 
 		std::unique_ptr<PlayerEntity> m_Player;
+
+		std::unique_ptr<WavesManager> m_WaveMan;
 
 		std::vector<EnemyEntity>  m_Enemies;
 		std::vector<BulletEntity> m_Bullets;
@@ -42,6 +46,10 @@ class GameScene : public Scene
 		sf::Sound m_PickupSound;
 		sf::Sound m_EnemyDeathSound;
 
-		sf::Clock m_Clock;
-		sf::Text  m_TimeAliveText;
+		float	 m_TimeAlive;
+		sf::Text m_TimeAliveText;
+
+		ResourceBar m_WaveBar;
+
+		sf::RenderTexture m_SnapshotRenderTexture;
 };

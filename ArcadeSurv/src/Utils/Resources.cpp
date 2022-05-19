@@ -11,7 +11,11 @@ Resources::Resources()
 	: m_Textures("Resources/Textures/", ".png")
 	, m_SoundBuffers("Resources/SFX/", ".ogg")
 	, m_Fonts("Resources/Fonts/", ".ttf")
-{ }
+{
+	m_Textures.LoadResource("textbox");
+
+	m_Fonts.LoadResource("VT323");
+}
 
 bool Resources::LoadTexture(const std::string& name)
 {

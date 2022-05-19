@@ -175,9 +175,14 @@
     <ClCompile Include="src\Entities\PlayerEntity.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Scenes\GameScene.cpp" />
+    <ClCompile Include="src\Scenes\MainMenuScene.cpp" />
+    <ClCompile Include="src\Scenes\PausedScene.cpp" />
+    <ClCompile Include="src\UI\Button.cpp" />
     <ClCompile Include="src\UI\ResourceBar.cpp" />
+    <ClCompile Include="src\UI\Textbox.cpp" />
     <ClCompile Include="src\Utils\Random.cpp" />
     <ClCompile Include="src\Utils\Resources.cpp" />
+    <ClCompile Include="src\WavesManager.cpp" />
     <ClCompile Include="src\WeaponTypes\BasicWeapon.cpp" />
     <ClCompile Include="src\WeaponTypes\SpreadWeapon.cpp" />
   </ItemGroup>
@@ -194,11 +199,16 @@
     <ClInclude Include="src\Entities\Enitity.hpp" />
     <ClInclude Include="src\Entities\PlayerEntity.hpp" />
     <ClInclude Include="src\Scenes\GameScene.hpp" />
+    <ClInclude Include="src\Scenes\MainMenuScene.hpp" />
+    <ClInclude Include="src\Scenes\PausedScene.hpp" />
     <ClInclude Include="src\Scenes\Scene.hpp" />
+    <ClInclude Include="src\UI\Button.hpp" />
     <ClInclude Include="src\UI\ResourceBar.hpp" />
+    <ClInclude Include="src\UI\Textbox.hpp" />
     <ClInclude Include="src\Utils\Random.hpp" />
     <ClInclude Include="src\Utils\ResourceManager.hpp" />
     <ClInclude Include="src\Utils\Resources.hpp" />
+    <ClInclude Include="src\WavesManager.hpp" />
     <ClInclude Include="src\WeaponTypes\BasicWeapon.hpp" />
     <ClInclude Include="src\WeaponTypes\SpreadWeapon.hpp" />
     <ClInclude Include="src\WeaponTypes\Weapon.hpp" />

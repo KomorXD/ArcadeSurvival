@@ -6,7 +6,7 @@
 #include <algorithm>
 
 PlayerEntity::PlayerEntity(GameScene* scene, const sf::Vector2f& pos)
-	: Entity(pos), m_Scene(scene), m_hpBar(&m_HP, { 500.0f, 16.0f }, { 10.0f, 15.0f })
+	: Entity(pos), m_Scene(scene), m_hpBar(&m_HP, { 500.0f, 16.0f }, { 10.0f, 15.0f }), m_UltBar(&m_KillCount, { 500.0f, 16.0f }, { 10.0f, 40.0f })
 {
 	m_PlayerCameraView.setCenter(640.0f, 360.0f);
 	m_PlayerCameraView.setSize(1280.0f, 720.0f);
@@ -29,6 +29,7 @@ PlayerEntity::PlayerEntity(GameScene* scene, const sf::Vector2f& pos)
 	}
 
 	m_hpBar.SetColor(sf::Color::Red);
+	m_UltBar.SetColor(sf::Color::Yellow);
 }
 
 void PlayerEntity::Input(float dt)
@@ -52,6 +53,11 @@ void PlayerEntity::OnDamage(int32_t damage, float dt)
 	m_InvulnFrames = static_cast<int32_t>(0.5f / dt);
 
 	m_HurtSound.play();
+}
+
+void PlayerEntity::OnEnemyKilled()
+{
+	m_KillCount = std::min(m_KillCount + 1, 5);
 }
 
 void PlayerEntity::SetSpeedMultiplier(float mul)
@@ -218,7 +224,9 @@ void PlayerEntity::Update(float dt)
 
 	UpdateAnimation(dt);
 	UpdateEffects(dt);
-	m_hpBar.Update();
+
+	m_hpBar.Update(100.0f);
+	m_UltBar.Update(5.0f);
 
 	m_Body.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
 	m_PlayerCameraView.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
@@ -233,6 +241,7 @@ void PlayerEntity::Render(sf::RenderTarget& renderer)
 		effect->RenderIcon(renderer);
 
 	m_hpBar.draw(renderer, sf::RenderStates::Default);
+	m_UltBar.draw(renderer, sf::RenderStates::Default);
 
 	renderer.setView(m_PlayerCameraView);
 }

@@ -14,6 +14,7 @@ class Entity
 		virtual void SetTexture(sf::Texture* texture);
 		virtual void SetPosition(const sf::Vector2f& pos);
 		virtual void SetSize(const sf::Vector2f& size);
+		virtual void SetColor(const sf::Color& color);
 
 		virtual inline sf::FloatRect GetCollider() const { return m_Body.getGlobalBounds(); }
 		virtual inline sf::Vector2f GetPosition() const { return m_Body.getPosition(); }

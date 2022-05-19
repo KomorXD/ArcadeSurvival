@@ -1,10 +1,10 @@
 #include "Application.hpp"
-#include "Scenes/GameScene.hpp"
+#include "Scenes/MainMenuScene.hpp"
 
 int main()
 {
     Application::Init(1280, 720, "lol");
-    Application::GetInstance().SetScene(new GameScene());
+    Application::GetInstance().PushScene(std::make_unique<MainMenuScene>());
     Application::GetInstance().Run();
     Application::Destroy();
     

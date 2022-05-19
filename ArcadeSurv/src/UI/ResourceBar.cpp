@@ -14,9 +14,9 @@ ResourceBar::ResourceBar(int32_t* pResource, const sf::Vector2f& size, const sf:
 	m_Outline.setFillColor(sf::Color::Transparent);
 }
 
-void ResourceBar::Update()
+void ResourceBar::Update(float maxVal)
 {
-	m_Bar.setSize({ m_Outline.getSize().x * (*m_pRes / 100.0f), m_Outline.getSize().y });
+	m_Bar.setSize({ m_Outline.getSize().x * (*m_pRes / maxVal), m_Outline.getSize().y });
 }
 
 void ResourceBar::SetColor(const sf::Color& color)

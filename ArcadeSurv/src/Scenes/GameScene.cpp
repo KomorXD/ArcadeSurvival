@@ -1,4 +1,5 @@
 #include "GameScene.hpp"
+#include "PausedScene.hpp"
 #include "../Application.hpp"
 #include "../Utils/Resources.hpp"
 #include "../Effects/Effects.hpp"
@@ -29,10 +30,16 @@ static void LoadResources()
 	res.LoadFont("IBMPlexMonoRegular");
 }
 
+static int32_t lol = 10;
+
 GameScene::GameScene()
-	: m_Floor({ 5000.0f, 5000.0f })
+	: m_Floor({ 5000.0f, 5000.0f }), m_WaveBar(&lol, { 500.0f, 16.0f }, { 10.0f, 65.0f })
 {
 	LoadResources();
+
+	m_WaveBar.SetColor(sf::Color::Cyan);
+
+	m_SnapshotRenderTexture.create(1280, 720);
 
 	if(sf::Font* font = Resources::Get().GetFont("IBMPlexMonoRegular"))
 		m_TimeAliveText.setFont(*font);
@@ -46,7 +53,7 @@ GameScene::GameScene()
 
 	m_Player->SetPosition({ 640.0f, 360.0f });
 	m_Player->SetMovementSpeed(200.0f);
-	m_Player->SetWeaponType(std::make_unique<SpreadWeapon>());
+	m_Player->SetWeaponType(std::make_unique<BasicWeapon>());
 
 	if(sf::Texture* tex = Resources::Get().GetTexture("player_atlas"))
 		m_Player->SetTexture(tex);
@@ -56,7 +63,7 @@ GameScene::GameScene()
 		m_Skybox.setTexture(*tex);
 		m_Skybox.scale({ 5.0f, 2.8125f });
 	}
-
+	
 	m_Floor.setOrigin({ 2500.0f, 2500.0f });
 	m_Floor.setPosition({ 640.0f, 360.0f });
 
@@ -65,19 +72,6 @@ GameScene::GameScene()
 		floorText->setRepeated(true);
 		m_Floor.setTexture(floorText);
 		m_Floor.setTextureRect({ 0, 0, 2500, 2500 });
-	}
-
-	EnemyEntity prototype(m_Player.get());
-	
-	if(sf::Texture* tex = Resources::Get().GetTexture("enemy_atlas"))
-		prototype.SetTexture(tex);
-
-	prototype.SetMovementSpeed(100.0f);
-
-	for(uint32_t i = 0; i < 10; ++i)
-	{
-		prototype.SetPosition({ Random::Get().FloatInRange(-1000.0f, 1000.0f), Random::Get().FloatInRange(-1000.0f, 1000.0f) });
-		m_Enemies.push_back(prototype);
 	}
 
 	m_EffectHolders.emplace_back(EffectType::HASTE,	  10.0f, 100.0f, sf::Vector2f(200.0f, 200.0f));
@@ -106,6 +100,8 @@ GameScene::GameScene()
 		m_EnemyDeathSound.setBuffer(*sb);
 		m_EnemyDeathSound.setVolume(20.0f);
 	}
+
+	m_WaveMan = std::make_unique<WavesManager>(this);
 }
 
 GameScene::~GameScene()
@@ -132,8 +128,20 @@ GameScene::~GameScene()
 
 void GameScene::HandleEvents(sf::Event& e)
 {
-	if(e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Escape)
-		Application::GetInstance().CloseWindow();
+	if(e.type == sf::Event::KeyPressed)
+	{
+		switch(e.key.code)
+		{
+			case sf::Keyboard::Escape:
+				m_SnapshotRenderTexture.clear();
+				Render(m_SnapshotRenderTexture);
+				Application::GetInstance().PushScene(std::make_unique<PausedScene>(m_SnapshotRenderTexture.getTexture()));
+
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 void GameScene::HandleInput(float dt)
@@ -170,28 +178,33 @@ static std::string GetFormattedTime(float secondsPassed)
 
 void GameScene::Update(float dt)
 {
+	m_WaveBar.Update(10.0f);
+
+	m_TimeAlive += dt;
+
 	CheckForPlayerCollisions(dt);
 	
 	m_Player->Update(dt);
 
 	CheckForPlayerOutsideOfArena();
-	CheckForEnemiesShot();
-	CheckForEnemiesToDespawn();
-	CheckForBulletsToDespawn();
-	CheckForEffectsToDespawn();
 	
 	enemiesUpdateFuture = std::async(std::launch::async, UpdateEntities<EnemyEntity>,  std::ref<std::vector<EnemyEntity>>(m_Enemies),		 dt);
 	bulletsUpdateFuture = std::async(std::launch::async, UpdateEntities<BulletEntity>, std::ref<std::vector<BulletEntity>>(m_Bullets),		 dt);
 	effectsUpdateFuture = std::async(std::launch::async, UpdateEntities<EffectEntity>, std::ref<std::vector<EffectEntity>>(m_EffectHolders), dt);
+	
+	CheckForEnemiesShot();
+	CheckForEnemiesToDespawn();
+	CheckForBulletsToDespawn();
+	CheckForEffectsToDespawn();
 
-	m_TimeAliveText.setString(GetFormattedTime(m_Clock.getElapsedTime().asSeconds()));
+	m_TimeAliveText.setString(GetFormattedTime(m_TimeAlive));
 }
 
 void GameScene::Render(sf::RenderTarget& renderer)
 {
 	renderer.draw(m_Skybox);
 
-	Application::GetInstance().SetWindowView(m_Player->GetPlayerCameraView());
+	renderer.setView(m_Player->GetPlayerCameraView());
 
 	renderer.draw(m_Floor);
 
@@ -205,23 +218,28 @@ void GameScene::Render(sf::RenderTarget& renderer)
 		effect.Render(renderer);
 
 	m_Player->Render(renderer);
-
-	Application::GetInstance().SetWindowView(m_Player->GetInterfaceView());
+	
+	renderer.setView(m_Player->GetInterfaceView());
 
 	renderer.draw(m_TimeAliveText);
+	m_WaveBar.draw(renderer, sf::RenderStates::Default);
 }
 
-void GameScene::SpawnBullet(const sf::Vector2f& dir, const sf::Vector2f& pos, float velocity, float strength)
+void GameScene::SpawnBullet(BulletEntity bullet)
 {
-	m_Bullets.emplace_back(pos);
-
-	BulletEntity& bullet = m_Bullets.back();
-
 	bullet.SetTexture(Resources::Get().GetTexture("basic_bullet"));
-	bullet.SetSize({ 16.0f, 16.0f });
-	bullet.SetVelocityVector(dir);
-	bullet.SetTravelSpeed(velocity);
-	bullet.SetStrength(strength);
+	m_Bullets.push_back(bullet);
+}
+
+void GameScene::SpawnEnemy(const sf::Vector2f& pos, const sf::Color& color, float strength, float movementSpeed)
+{
+	m_Enemies.emplace_back(m_Player.get(), pos);
+	m_Enemies.back().SetColor(color);
+	m_Enemies.back().SetStrength(strength);
+	m_Enemies.back().SetMovementSpeed(movementSpeed);
+
+	if(sf::Texture* tex = Resources::Get().GetTexture("enemy_atlas"))
+		m_Enemies.back().SetTexture(tex);
 }
 
 void GameScene::CheckForPlayerCollisions(float dt)
@@ -243,9 +261,9 @@ void GameScene::CheckForPlayerCollisions(float dt)
 
 	for(auto& enemy : m_Enemies)
 	{
-		if(enemy.GetCollider().intersects(playerCollider))
+		if(!enemy.IsDying() && enemy.GetCollider().intersects(playerCollider))
 		{
-			m_Player->OnDamage(10, dt);
+			m_Player->OnDamage(enemy.GetStrength(), dt);
 
 			break;
 		}
@@ -276,6 +294,9 @@ void GameScene::CheckForEnemiesShot()
 {
 	for(auto enemyItr = m_Enemies.begin(); enemyItr != m_Enemies.end(); ++enemyItr)
 	{
+		if(enemyItr->IsDying())
+			continue;
+
 		for(auto bulletItr = m_Bullets.begin(); bulletItr != m_Bullets.end(); ++bulletItr)
 		{
 			if(bulletItr->GetCollider().intersects(enemyItr->GetCollider()))
@@ -314,6 +335,9 @@ void GameScene::CheckForEnemiesToDespawn()
 		if(enemy.IsDead())
 		{
 			m_EnemyDeathSound.play();
+			m_Player->OnEnemyKilled();
+
+			--lol;
 
 			return true;
 		}

@@ -31,3 +31,8 @@ void Entity::SetSize(const sf::Vector2f& size)
 	m_Body.setSize(size);
 	m_Body.setOrigin({ size.x / 2.0f, size.y / 2.0f });
 }
+
+void Entity::SetColor(const sf::Color& color)
+{
+	m_Body.setFillColor(color);
+}
