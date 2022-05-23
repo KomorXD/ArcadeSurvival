@@ -56,7 +56,7 @@ GameScene::GameScene()
 
 	m_Player->SetPosition({ 640.0f, 360.0f });
 	m_Player->SetMovementSpeed(200.0f);
-	m_Player->SetWeaponType(std::make_unique<BasicWeapon>());
+	m_Player->SetWeaponType(std::make_unique<SpreadWeapon>());
 
 	if(sf::Texture* tex = Resources::Get().GetTexture("player_atlas"))
 		m_Player->SetTexture(tex);
