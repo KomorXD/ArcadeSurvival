@@ -18,6 +18,7 @@ static void LoadResources()
 	res.LoadTexture("effect_haste");
 	res.LoadTexture("effect_cripple");
 	res.LoadTexture("effect_quad");
+	res.LoadTexture("effect_heal");
 	res.LoadTexture("floor");
 	res.LoadTexture("sky");
 
@@ -35,6 +36,8 @@ static int32_t lol = 10;
 GameScene::GameScene()
 	: m_Floor({ 5000.0f, 5000.0f }), m_WaveBar(&lol, { 500.0f, 16.0f }, { 10.0f, 65.0f })
 {
+	lol = 10;
+
 	LoadResources();
 
 	m_WaveBar.SetColor(sf::Color::Cyan);
@@ -43,7 +46,7 @@ GameScene::GameScene()
 
 	if(sf::Font* font = Resources::Get().GetFont("IBMPlexMonoRegular"))
 		m_TimeAliveText.setFont(*font);
-
+	
 	m_TimeAliveText.setString("00:00:00");
 	m_TimeAliveText.setPosition({ Application::GetInstance().GetWindow().getSize().x / 2.0f, 5.0f });
 
@@ -74,9 +77,10 @@ GameScene::GameScene()
 		m_Floor.setTextureRect({ 0, 0, 2500, 2500 });
 	}
 
-	m_EffectHolders.emplace_back(EffectType::HASTE,	  10.0f, 100.0f, sf::Vector2f(200.0f, 200.0f));
-	m_EffectHolders.emplace_back(EffectType::QUAD,	  10.0f, 100.0f, sf::Vector2f(100.0f, 600.0f));
-	m_EffectHolders.emplace_back(EffectType::CRIPPLE, 10.0f, 100.0f, sf::Vector2f(700.0f, 200.0f));
+	m_EffectHolders.emplace_back(EffectType::HASTE,	  10.0f, 100.0f, sf::Vector2f(200.0f,  200.0f));
+	m_EffectHolders.emplace_back(EffectType::QUAD,	  10.0f, 100.0f, sf::Vector2f(100.0f,  600.0f));
+	m_EffectHolders.emplace_back(EffectType::CRIPPLE, 10.0f, 100.0f, sf::Vector2f(700.0f,  200.0f));
+	m_EffectHolders.emplace_back(EffectType::HEAL,	  0.0f,	 100.0f, sf::Vector2f(1000.0f, 200.0f));
 
 	for(auto& ef : m_EffectHolders)
 		ef.SetSize({ 48.0f, 48.0f });
@@ -156,10 +160,6 @@ static void UpdateEntities(std::vector<EntityType>& entities, float dt)
 		entity.Update(dt);
 }
 
-static std::future<void> bulletsUpdateFuture;
-static std::future<void> enemiesUpdateFuture;
-static std::future<void> effectsUpdateFuture;
-
 static std::string GetFormattedTime(float secondsPassed)
 {
 	int32_t minutes = static_cast<int32_t>(secondsPassed) / 60;
@@ -187,15 +187,14 @@ void GameScene::Update(float dt)
 	m_Player->Update(dt);
 
 	CheckForPlayerOutsideOfArena();
-	
-	enemiesUpdateFuture = std::async(std::launch::async, UpdateEntities<EnemyEntity>,  std::ref<std::vector<EnemyEntity>>(m_Enemies),		 dt);
-	bulletsUpdateFuture = std::async(std::launch::async, UpdateEntities<BulletEntity>, std::ref<std::vector<BulletEntity>>(m_Bullets),		 dt);
-	effectsUpdateFuture = std::async(std::launch::async, UpdateEntities<EffectEntity>, std::ref<std::vector<EffectEntity>>(m_EffectHolders), dt);
-	
 	CheckForEnemiesShot();
 	CheckForEnemiesToDespawn();
 	CheckForBulletsToDespawn();
 	CheckForEffectsToDespawn();
+
+	std::future<void> bulletsUpdateFuture = std::async(std::launch::async, UpdateEntities<EnemyEntity>,  std::ref<std::vector<EnemyEntity>>(m_Enemies),		   dt);
+	std::future<void> enemiesUpdateFuture = std::async(std::launch::async, UpdateEntities<BulletEntity>, std::ref<std::vector<BulletEntity>>(m_Bullets),	   dt);
+	std::future<void> effectsUpdateFuture = std::async(std::launch::async, UpdateEntities<EffectEntity>, std::ref<std::vector<EffectEntity>>(m_EffectHolders), dt);
 
 	m_TimeAliveText.setString(GetFormattedTime(m_TimeAlive));
 }
@@ -263,7 +262,7 @@ void GameScene::CheckForPlayerCollisions(float dt)
 	{
 		if(!enemy.IsDying() && enemy.GetCollider().intersects(playerCollider))
 		{
-			m_Player->OnDamage(enemy.GetStrength(), dt);
+			m_Player->OnDamage(static_cast<int32_t>(enemy.GetStrength()), dt);
 
 			break;
 		}

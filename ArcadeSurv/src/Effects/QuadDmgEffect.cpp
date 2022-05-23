@@ -13,7 +13,7 @@ QuadDmgEffect::~QuadDmgEffect()
 		m_AffectedPlayer->SetDamageMultiplier(1.0f);
 }
 
-void QuadDmgEffect::BindEffect(PlayerEntity * player)
+void QuadDmgEffect::BindEffect(PlayerEntity* player)
 {
 	m_AffectedPlayer = player;
 	m_AffectedPlayer->SetDamageMultiplier(4.0f);

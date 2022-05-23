@@ -4,8 +4,11 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 Effect::Effect(float time, sf::Texture* icon)
-	: m_Icon(*icon), m_TimeLeft(time)
-{ }
+	: m_TimeLeft(time)
+{
+	if(icon)
+		m_Icon.setTexture(*icon);
+}
 
 void Effect::RefreshEffect(float time)
 {

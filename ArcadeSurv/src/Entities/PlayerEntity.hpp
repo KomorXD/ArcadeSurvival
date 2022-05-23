@@ -23,6 +23,7 @@ class PlayerEntity : public Entity
 
 		void Input(float dt);
 		void OnDamage(int32_t damage, float dt);
+		void Heal(int32_t healAmount);
 		void OnEnemyKilled();
 
 		void SetSpeedMultiplier(float mul);

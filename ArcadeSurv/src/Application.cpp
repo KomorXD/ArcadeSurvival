@@ -78,7 +78,7 @@ void Application::Destroy()
 Application::Application(uint32_t width, uint32_t height, const char* title)
 	: m_Window({ width, height }, title, sf::Style::Titlebar | sf::Style::Close)
 {
-	// m_Window.setFramerateLimit(60);
+	m_Window.setFramerateLimit(60);
 }
 
 Application::~Application()

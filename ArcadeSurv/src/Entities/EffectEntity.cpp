@@ -26,6 +26,12 @@ EffectEntity::EffectEntity(EffectType effectType, float duration, float entityLi
 
 			break;
 
+		case EffectType::HEAL:
+			m_StoredEffect = std::make_unique<HealEffect>(0.0f, nullptr);
+			SetTexture(Resources::Get().GetTexture("effect_heal"));
+
+			break;
+
 		default:
 			break;
 	}

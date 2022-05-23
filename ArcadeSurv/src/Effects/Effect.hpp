@@ -7,7 +7,8 @@ enum class EffectType
 	NONE,
 	QUAD,
 	HASTE,
-	CRIPPLE
+	CRIPPLE,
+	HEAL
 };
 
 class PlayerEntity;

@@ -105,6 +105,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system-d.lib;sfml-audio-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y $(SolutionDir)Dependencies\SFML\bin\openal32.dll $(ProjectDir)bin\$(Platform)-$(Configuration)\openal32.dll
+xcopy /Y /E /I $(ProjectDir)Resources $(ProjectDir)bin\$(Platform)-$(Configuration)\Resources</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -125,6 +129,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system.lib;sfml-audio.lib;sfml-window.lib;sfml-graphics.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y $(SolutionDir)Dependencies\SFML\bin\openal32.dll $(ProjectDir)bin\$(Platform)-$(Configuration)\openal32.dll
+xcopy /Y /E /I $(ProjectDir)Resources $(ProjectDir)bin\$(Platform)-$(Configuration)\Resources</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -141,6 +149,10 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system-s-d.lib;sfml-main-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;sfml-graphics-s-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);flac.lib;freetype.lib;ogg.lib;openal32.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;opengl32.lib;gdi32.lib;winmm.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y $(SolutionDir)Dependencies\SFML\bin\openal32.dll $(ProjectDir)bin\$(Platform)-$(Configuration)\openal32.dll
+xcopy /Y /E /I $(ProjectDir)Resources $(ProjectDir)bin\$(Platform)-$(Configuration)\Resources</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -161,11 +173,16 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system-s.lib;sfml-main.lib;sfml-audio-s.lib;sfml-window-s.lib;sfml-graphics-s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);flac.lib;freetype.lib;ogg.lib;openal32.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;opengl32.lib;winmm.lib</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y $(SolutionDir)Dependencies\SFML\bin\openal32.dll $(ProjectDir)bin\$(Platform)-$(Configuration)\openal32.dll
+xcopy /Y /E /I $(ProjectDir)Resources $(ProjectDir)bin\$(Platform)-$(Configuration)\Resources</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Effects\Effect.cpp" />
     <ClCompile Include="src\Effects\HasteEffect.cpp" />
+    <ClCompile Include="src\Effects\HealEffect.cpp" />
     <ClCompile Include="src\Effects\QuadDmgEffect.cpp" />
     <ClCompile Include="src\Effects\CrippleEffect.cpp" />
     <ClCompile Include="src\Entities\BulletEntity.cpp" />
@@ -191,6 +208,7 @@
     <ClInclude Include="src\Effects\Effect.hpp" />
     <ClInclude Include="src\Effects\Effects.hpp" />
     <ClInclude Include="src\Effects\HasteEffect.hpp" />
+    <ClInclude Include="src\Effects\HealEffect.hpp" />
     <ClInclude Include="src\Effects\QuadDmgEffect.hpp" />
     <ClInclude Include="src\Effects\CrippleEffect.hpp" />
     <ClInclude Include="src\Entities\BulletEntity.hpp" />

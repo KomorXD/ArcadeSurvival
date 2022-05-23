@@ -55,6 +55,11 @@ void PlayerEntity::OnDamage(int32_t damage, float dt)
 	m_HurtSound.play();
 }
 
+void PlayerEntity::Heal(int32_t healAmount)
+{
+	m_HP = std::min(m_HP + healAmount, 100);
+}
+
 void PlayerEntity::OnEnemyKilled()
 {
 	m_KillCount = std::min(m_KillCount + 1, 5);
