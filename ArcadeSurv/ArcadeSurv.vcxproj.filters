@@ -42,28 +42,10 @@
     <ClCompile Include="src\Entities\BulletEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Effects\Effect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Effects\HasteEffect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Entities\EffectEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Effects\QuadDmgEffect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Effects\CrippleEffect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\UI\ResourceBar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WeaponTypes\BasicWeapon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WeaponTypes\SpreadWeapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Scenes\PausedScene.cpp">
@@ -81,7 +63,10 @@
     <ClCompile Include="src\WavesManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Effects\HealEffect.cpp">
+    <ClCompile Include="src\WeaponTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,37 +101,10 @@
     <ClInclude Include="src\Entities\BulletEntity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Effects\Effect.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Effects\HasteEffect.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Entities\EffectEntity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Effects\QuadDmgEffect.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Effects\CrippleEffect.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Effects\Effects.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\UI\ResourceBar.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\WeaponTypes\Weapon.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\WeaponTypes\BasicWeapon.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\WeaponTypes\Weapons.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\WeaponTypes\SpreadWeapon.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Scenes\PausedScene.hpp">
@@ -164,7 +122,10 @@
     <ClInclude Include="src\WavesManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Effects\HealEffect.hpp">
+    <ClInclude Include="src\WeaponTypes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effects.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

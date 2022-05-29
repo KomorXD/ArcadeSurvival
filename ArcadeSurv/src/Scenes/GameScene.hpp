@@ -21,17 +21,20 @@ class GameScene : public Scene
 		virtual void Render(sf::RenderTarget& renderer) override;
 
 		void SpawnBullet(BulletEntity bullet);
+		void SpawnEnemy(EnemyEntity enemy);
+		void SpawnPowerUp(EffectEntity&& effect);
 		void SpawnEnemy(const sf::Vector2f& pos, const sf::Color& color, float strength, float movementSpeed);
+		void DealDamageInArea(const sf::Vector2f& center, float radius, int32_t damage);
 
 	private:
-		void CheckForPlayerCollisions(float dt);
+		void CheckForPlayerCollisions();
 		void CheckForPlayerOutsideOfArena();
 		void CheckForEnemiesShot();
 		void CheckForBulletsToDespawn();
 		void CheckForEnemiesToDespawn();
 		void CheckForEffectsToDespawn();
 
-		std::unique_ptr<PlayerEntity> m_Player;
+		std::shared_ptr<PlayerEntity> m_Player;
 
 		std::unique_ptr<WavesManager> m_WaveMan;
 
@@ -49,7 +52,7 @@ class GameScene : public Scene
 		float	 m_TimeAlive;
 		sf::Text m_TimeAliveText;
 
-		ResourceBar m_WaveBar;
-
 		sf::RenderTexture m_SnapshotRenderTexture;
+
+		float m_DeltaTime = 1.0f / 60.0f;
 };

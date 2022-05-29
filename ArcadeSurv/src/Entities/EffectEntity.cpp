@@ -1,7 +1,6 @@
 #include "EffectEntity.hpp"
 #include "PlayerEntity.hpp"
 #include "../Utils/Resources.hpp"
-#include "../Effects/Effects.hpp"
 
 EffectEntity::EffectEntity(EffectType effectType, float duration, float entityLifespan, const sf::Vector2f& pos)
 	: Entity(pos), m_Lifespan(entityLifespan)
@@ -29,6 +28,24 @@ EffectEntity::EffectEntity(EffectType effectType, float duration, float entityLi
 		case EffectType::HEAL:
 			m_StoredEffect = std::make_unique<HealEffect>(0.0f, nullptr);
 			SetTexture(Resources::Get().GetTexture("effect_heal"));
+
+			break;
+
+		case EffectType::NO_WEAPON:
+			m_StoredEffect = std::make_unique<NoWeaponEffect>(duration, Resources::Get().GetTexture("effect_no_weapon"));
+			SetTexture(Resources::Get().GetTexture("effect_no_weapon"));
+
+			break;
+
+		case EffectType::SPREAD_WEAPON:
+			m_StoredEffect = std::make_unique<SpreadWeaponEffect>(-1.0f, Resources::Get().GetTexture("effect_spread_weapon"));
+			SetTexture(Resources::Get().GetTexture("effect_spread_weapon"));
+
+			break;
+
+		case EffectType::EXPLOSIVE_WEAPON:
+			m_StoredEffect = std::make_unique<ExplosiveWeaponEffect>(-1.0f, Resources::Get().GetTexture("effect_explosive_weapon"));
+			SetTexture(Resources::Get().GetTexture("effect_explosive_weapon"));
 
 			break;
 

@@ -37,7 +37,7 @@ void PlayerEntity::Input(float dt)
 	MovementInput();
 	FacingDirInput();
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && m_FireFrames == 0)
+	if(!HasEffect(EffectType::NO_WEAPON) && sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && m_FireFrames == 0)
 	{
 		m_UsedWeaponType->Shoot(m_Scene, m_FacingDir, GetPosition(), m_DamageMultiplier);
 
@@ -90,6 +90,32 @@ void PlayerEntity::SetWeaponType(std::unique_ptr<Weapon>&& type)
 	m_UsedWeaponType = std::move(type);
 }
 
+bool PlayerEntity::HasEffect(EffectType eff)
+{
+	for(auto& effect : m_Effects)
+	{
+		if(effect->GetEffectType() == eff)
+			return true;
+	}
+
+	return false;
+}
+
+bool PlayerEntity::ClearEffect(EffectType eff)
+{
+	for(auto& effect : m_Effects)
+	{
+		if(effect->GetEffectType() == eff)
+		{
+			effect->ClearEffect();
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void PlayerEntity::ApplyEffect(std::unique_ptr<Effect>&& effect)
 {
 	EffectType newEffectType	= effect->GetEffectType();
@@ -100,7 +126,11 @@ void PlayerEntity::ApplyEffect(std::unique_ptr<Effect>&& effect)
 		std::unique_ptr<Effect>& eff = *itr;
 		
 		if(eff->GetEffectType() == newEffectType)
+		{
 			eff->RefreshEffect(effect->TimeLeft());
+
+			return;
+		}
 
 		if(eff->GetEffectType() == newEffectOppType)
 		{

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Enitity.hpp"
-#include "../Effects/Effect.hpp"
+#include "../Effects.hpp"
 
 class EffectEntity : public Entity
 {

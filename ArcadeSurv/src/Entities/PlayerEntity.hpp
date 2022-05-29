@@ -2,9 +2,9 @@
 
 #include "Enitity.hpp"
 #include "BulletEntity.hpp"
-#include "../Effects/Effect.hpp"
 #include "../UI/ResourceBar.hpp"
-#include "../WeaponTypes/Weapon.hpp"
+#include "../Effects.hpp"
+#include "../WeaponTypes.hpp"
 
 #include <vector>
 #include <SFML/Audio/Sound.hpp>
@@ -32,11 +32,15 @@ class PlayerEntity : public Entity
 		void SetMovementSpeed(float ms);
 		void SetWeaponType(std::unique_ptr<Weapon>&& type);
 
+		bool HasEffect(EffectType eff);
+		bool ClearEffect(EffectType eff);
+
 		void ApplyEffect(std::unique_ptr<Effect>&& effect);
 		
 		inline bool IsVulnerable() const { return m_InvulnFrames == 0; }
 		inline const sf::View& GetPlayerCameraView() const { return m_PlayerCameraView; }
 		inline const sf::View& GetInterfaceView() const { return m_InterfaceView; }
+		inline float GetDmgMultiplier() const { return m_DamageMultiplier; }
 
 	private:
 		void MovementInput();

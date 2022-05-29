@@ -2,9 +2,9 @@
 #include "PausedScene.hpp"
 #include "../Application.hpp"
 #include "../Utils/Resources.hpp"
-#include "../Effects/Effects.hpp"
 #include "../Utils/Random.hpp"
-#include "../WeaponTypes/Weapons.hpp"
+#include "../Effects.hpp"
+#include "../WeaponTypes.hpp"
 
 #include <future>
 
@@ -19,6 +19,9 @@ static void LoadResources()
 	res.LoadTexture("effect_cripple");
 	res.LoadTexture("effect_quad");
 	res.LoadTexture("effect_heal");
+	res.LoadTexture("effect_spread_weapon");
+	res.LoadTexture("effect_explosive_weapon");
+	res.LoadTexture("effect_no_weapon");
 	res.LoadTexture("floor");
 	res.LoadTexture("sky");
 
@@ -31,16 +34,10 @@ static void LoadResources()
 	res.LoadFont("IBMPlexMonoRegular");
 }
 
-static int32_t lol = 10;
-
 GameScene::GameScene()
-	: m_Floor({ 5000.0f, 5000.0f }), m_WaveBar(&lol, { 500.0f, 16.0f }, { 10.0f, 65.0f })
+	: m_Floor({ 10000.0f, 10000.0f })
 {
-	lol = 10;
-
 	LoadResources();
-
-	m_WaveBar.SetColor(sf::Color::Cyan);
 
 	m_SnapshotRenderTexture.create(1280, 720);
 
@@ -49,14 +46,13 @@ GameScene::GameScene()
 	
 	m_TimeAliveText.setString("00:00:00");
 	m_TimeAliveText.setPosition({ Application::GetInstance().GetWindow().getSize().x / 2.0f, 5.0f });
-
 	m_TimeAliveText.move({ -m_TimeAliveText.getLocalBounds().width / 1.6f, 0.0f});
 
-	m_Player = std::make_unique<PlayerEntity>(this);
+	m_Player = std::make_shared<PlayerEntity>(this);
 
-	m_Player->SetPosition({ 640.0f, 360.0f });
+	m_Player->SetPosition({ 0.0f, 0.0f });
 	m_Player->SetMovementSpeed(200.0f);
-	m_Player->SetWeaponType(std::make_unique<SpreadWeapon>());
+	m_Player->SetWeaponType(std::make_unique<BasicWeapon>());
 
 	if(sf::Texture* tex = Resources::Get().GetTexture("player_atlas"))
 		m_Player->SetTexture(tex);
@@ -67,23 +63,17 @@ GameScene::GameScene()
 		m_Skybox.scale({ 5.0f, 2.8125f });
 	}
 	
-	m_Floor.setOrigin({ 2500.0f, 2500.0f });
-	m_Floor.setPosition({ 640.0f, 360.0f });
+	m_Floor.setOrigin(m_Floor.getSize() / 2.0f);
+	m_Floor.setPosition({ 0.0f, 0.0f });
+	m_Floor.setOutlineThickness(20.0f);
+	m_Floor.setOutlineColor(sf::Color::Black);
 
 	if(sf::Texture* floorText = Resources::Get().GetTexture("floor"))
 	{
 		floorText->setRepeated(true);
 		m_Floor.setTexture(floorText);
-		m_Floor.setTextureRect({ 0, 0, 2500, 2500 });
+		m_Floor.setTextureRect({ 0, 0, 5000, 5000 });
 	}
-
-	m_EffectHolders.emplace_back(EffectType::HASTE,	  10.0f, 100.0f, sf::Vector2f(200.0f,  200.0f));
-	m_EffectHolders.emplace_back(EffectType::QUAD,	  10.0f, 100.0f, sf::Vector2f(100.0f,  600.0f));
-	m_EffectHolders.emplace_back(EffectType::CRIPPLE, 10.0f, 100.0f, sf::Vector2f(700.0f,  200.0f));
-	m_EffectHolders.emplace_back(EffectType::HEAL,	  0.0f,	 100.0f, sf::Vector2f(1000.0f, 200.0f));
-
-	for(auto& ef : m_EffectHolders)
-		ef.SetSize({ 48.0f, 48.0f });
 
 	if(sf::SoundBuffer* sb = Resources::Get().GetSoundBuffer("ambient"))
 	{
@@ -105,7 +95,7 @@ GameScene::GameScene()
 		m_EnemyDeathSound.setVolume(20.0f);
 	}
 
-	m_WaveMan = std::make_unique<WavesManager>(this);
+	m_WaveMan = std::make_unique<WavesManager>(this, m_Player);
 }
 
 GameScene::~GameScene()
@@ -118,6 +108,9 @@ GameScene::~GameScene()
 	res.DeleteTexture("effect_haste");
 	res.DeleteTexture("effect_cripple");
 	res.DeleteTexture("effect_quad");
+	res.DeleteTexture("effect_spread_weapon");
+	res.DeleteTexture("effect_explosive_weapon");
+	res.DeleteTexture("effect_no_weapon");
 	res.DeleteTexture("floor");
 	res.DeleteTexture("sky");
 
@@ -178,11 +171,13 @@ static std::string GetFormattedTime(float secondsPassed)
 
 void GameScene::Update(float dt)
 {
-	m_WaveBar.Update(10.0f);
+	m_DeltaTime = dt;
+
+	m_WaveMan->Update(dt);
 
 	m_TimeAlive += dt;
 
-	CheckForPlayerCollisions(dt);
+	CheckForPlayerCollisions();
 	
 	m_Player->Update(dt);
 
@@ -197,6 +192,9 @@ void GameScene::Update(float dt)
 	std::future<void> effectsUpdateFuture = std::async(std::launch::async, UpdateEntities<EffectEntity>, std::ref<std::vector<EffectEntity>>(m_EffectHolders), dt);
 
 	m_TimeAliveText.setString(GetFormattedTime(m_TimeAlive));
+
+	if(m_WaveMan->WaveOver())
+		m_WaveMan->NextWave();
 }
 
 void GameScene::Render(sf::RenderTarget& renderer)
@@ -221,13 +219,30 @@ void GameScene::Render(sf::RenderTarget& renderer)
 	renderer.setView(m_Player->GetInterfaceView());
 
 	renderer.draw(m_TimeAliveText);
-	m_WaveBar.draw(renderer, sf::RenderStates::Default);
+	
+	m_WaveMan->Render(renderer);
 }
 
 void GameScene::SpawnBullet(BulletEntity bullet)
 {
-	bullet.SetTexture(Resources::Get().GetTexture("basic_bullet"));
+	if(sf::Texture* text = Resources::Get().GetTexture("basic_bullet"))
+		bullet.SetTexture(text);
+
 	m_Bullets.push_back(bullet);
+}
+
+void GameScene::SpawnEnemy(EnemyEntity enemy)
+{
+	if(sf::Texture* text = Resources::Get().GetTexture("enemy_atlas"))
+		enemy.SetTexture(text);
+
+	enemy.SetPlayerPtr(m_Player.get());
+	m_Enemies.push_back(enemy);
+}
+
+void GameScene::SpawnPowerUp(EffectEntity&& effect)
+{
+	m_EffectHolders.push_back(std::move(effect));
 }
 
 void GameScene::SpawnEnemy(const sf::Vector2f& pos, const sf::Color& color, float strength, float movementSpeed)
@@ -241,7 +256,18 @@ void GameScene::SpawnEnemy(const sf::Vector2f& pos, const sf::Color& color, floa
 		m_Enemies.back().SetTexture(tex);
 }
 
-void GameScene::CheckForPlayerCollisions(float dt)
+void GameScene::DealDamageInArea(const sf::Vector2f& center, float radius, int32_t damage)
+{
+	for(auto& enemy : m_Enemies)
+	{
+		sf::Vector2f enemyPos = enemy.GetPosition();
+
+		if(std::sqrtf(std::powf(center.x - enemyPos.x, 2.0f) + std::powf(center.y - enemyPos.y, 2.0f)) <= radius)
+			enemy.OnDamage(damage, m_DeltaTime);
+	}
+}
+
+void GameScene::CheckForPlayerCollisions()
 {
 	sf::FloatRect playerCollider = m_Player->GetCollider();
 
@@ -262,7 +288,7 @@ void GameScene::CheckForPlayerCollisions(float dt)
 	{
 		if(!enemy.IsDying() && enemy.GetCollider().intersects(playerCollider))
 		{
-			m_Player->OnDamage(static_cast<int32_t>(enemy.GetStrength()), dt);
+			m_Player->OnDamage(static_cast<int32_t>(enemy.GetStrength()), m_DeltaTime);
 
 			break;
 		}
@@ -300,7 +326,11 @@ void GameScene::CheckForEnemiesShot()
 		{
 			if(bulletItr->GetCollider().intersects(enemyItr->GetCollider()))
 			{
-				enemyItr->OnDamage(static_cast<int32_t>(bulletItr->GetStrength()));
+				enemyItr->OnDamage(static_cast<int32_t>(bulletItr->GetStrength()), m_DeltaTime);
+
+				if(m_Player->HasEffect(EffectType::EXPLOSIVE_WEAPON))
+					DealDamageInArea(bulletItr->GetPosition(), 200.0f, static_cast<int32_t>(20.0f * m_Player->GetDmgMultiplier()));
+
 				m_Bullets.erase(bulletItr);
 
 				break;
@@ -335,8 +365,7 @@ void GameScene::CheckForEnemiesToDespawn()
 		{
 			m_EnemyDeathSound.play();
 			m_Player->OnEnemyKilled();
-
-			--lol;
+			m_WaveMan->OnEnemyKilled();
 
 			return true;
 		}

@@ -33,6 +33,7 @@ void EnemyEntity::Update(float dt)
 	m_Body.move(wishDir * m_MovementSpeed * dt);
 	
 	m_AnimationFrames = std::max(m_AnimationFrames - 1, 0);
+	m_DamageTakenFrames = std::max(m_DamageTakenFrames - 1, 0);
 
 	if(m_AnimationFrames == 0)
 	{
@@ -41,6 +42,9 @@ void EnemyEntity::Update(float dt)
 		m_AnimationFrames = static_cast<int32_t>(0.5f / dt);
 		m_Body.setTextureRect({ 32 - texRect.left, 0, 32, 32 });
 	}
+
+	if(m_DamageTakenFrames == 0 && m_Body.getFillColor() == sf::Color::Red)
+		m_Body.setFillColor(sf::Color::Green);
 }
 
 void EnemyEntity::Render(sf::RenderTarget& renderer)
@@ -48,9 +52,11 @@ void EnemyEntity::Render(sf::RenderTarget& renderer)
 	renderer.draw(m_Body);
 }
 
-void EnemyEntity::OnDamage(int32_t damage)
+void EnemyEntity::OnDamage(int32_t damage, float dt)
 {
 	m_HP = std::max(0, m_HP - damage);
+	m_DamageTakenFrames = static_cast<int32_t>(0.1f / dt);
+	m_Body.setFillColor(sf::Color::Red);
 }
 
 void EnemyEntity::SetMovementSpeed(float ms)
@@ -61,6 +67,11 @@ void EnemyEntity::SetMovementSpeed(float ms)
 void EnemyEntity::SetStrength(float strength)
 {
 	m_Strength = strength;
+}
+
+void EnemyEntity::SetPlayerPtr(PlayerEntity* ptr)
+{
+	m_PlayerPtr = ptr;
 }
 
 void EnemyEntity::DyingUpdate(float dt)
