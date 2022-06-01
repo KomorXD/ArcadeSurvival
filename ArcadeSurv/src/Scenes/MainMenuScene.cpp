@@ -24,7 +24,7 @@ MainMenuScene::MainMenuScene()
 	Resources::Get().LoadTexture("menu_background");
 
 	m_Background.setTexture(*Resources::Get().GetTexture("menu_background"));
-	m_Background.setScale({ 2.438f, 2.438f });
+	m_Background.setScale({ windowSize.x / 525.0f, windowSize.x / 525.0f });
 }
 
 MainMenuScene::~MainMenuScene()

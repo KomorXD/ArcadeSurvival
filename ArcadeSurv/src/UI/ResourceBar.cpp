@@ -24,6 +24,18 @@ void ResourceBar::SetColor(const sf::Color& color)
 	m_Bar.setFillColor(color);
 }
 
+void ResourceBar::SetSize(const sf::Vector2f& size)
+{
+	m_Bar.setSize(size);
+	m_Outline.setSize(size);
+}
+
+void ResourceBar::SetPosition(const sf::Vector2f& pos)
+{
+	m_Bar.setPosition(pos);
+	m_Outline.setPosition(pos);
+}
+
 void ResourceBar::draw(sf::RenderTarget& renderer, sf::RenderStates states) const
 {
 	renderer.draw(m_Bar);

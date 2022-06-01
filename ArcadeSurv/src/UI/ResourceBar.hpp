@@ -10,6 +10,8 @@ class ResourceBar : public sf::Drawable
 
 		void Update(float maxVal);
 		void SetColor(const sf::Color& color);
+		void SetSize(const sf::Vector2f& size);
+		void SetPosition(const sf::Vector2f& pos);
 		
 		virtual void draw(sf::RenderTarget& renderer, sf::RenderStates states) const override;
 

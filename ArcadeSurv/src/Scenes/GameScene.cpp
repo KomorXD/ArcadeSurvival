@@ -39,13 +39,15 @@ GameScene::GameScene()
 {
 	LoadResources();
 
-	m_SnapshotRenderTexture.create(1280, 720);
+	sf::Vector2u windowSize = Application::GetInstance().GetWindowSize();
+
+	m_SnapshotRenderTexture.create(windowSize.x, windowSize.y);
 
 	if(sf::Font* font = Resources::Get().GetFont("IBMPlexMonoRegular"))
 		m_TimeAliveText.setFont(*font);
 	
 	m_TimeAliveText.setString("00:00:00");
-	m_TimeAliveText.setPosition({ Application::GetInstance().GetWindow().getSize().x / 2.0f, 5.0f });
+	m_TimeAliveText.setPosition({ Application::GetInstance().GetWindowSize().x / 2.0f, 5.0f });
 	m_TimeAliveText.move({ -m_TimeAliveText.getLocalBounds().width / 1.6f, 0.0f});
 
 	m_Player = std::make_shared<PlayerEntity>(this);

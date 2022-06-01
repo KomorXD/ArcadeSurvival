@@ -1,6 +1,7 @@
 #include "PlayerEntity.hpp"
 #include "../Scenes/GameScene.hpp"
 #include "../Utils/Resources.hpp"
+#include "../Application.hpp"
 
 #include <ranges>
 #include <algorithm>
@@ -8,11 +9,16 @@
 PlayerEntity::PlayerEntity(GameScene* scene, const sf::Vector2f& pos)
 	: Entity(pos), m_Scene(scene), m_hpBar(&m_HP, { 500.0f, 16.0f }, { 10.0f, 15.0f }), m_UltBar(&m_KillCount, { 500.0f, 16.0f }, { 10.0f, 40.0f })
 {
-	m_PlayerCameraView.setCenter(640.0f, 360.0f);
-	m_PlayerCameraView.setSize(1280.0f, 720.0f);
+	sf::Vector2f windowSize = sf::Vector2f(Application::GetInstance().GetWindowSize());
+
+	m_PlayerCameraView.setCenter(windowSize / 2.0f);
+	m_PlayerCameraView.setSize(windowSize);
 	
-	m_InterfaceView.setCenter(640.0f, 360.0f);
-	m_InterfaceView.setSize(1280.0f, 720.0f);
+	m_InterfaceView.setCenter(windowSize / 2.0f);
+	m_InterfaceView.setSize(windowSize);
+
+	m_hpBar.SetSize({  windowSize.x / 2.56f, 16.0f });
+	m_UltBar.SetSize({ windowSize.x / 2.56f, 16.0f });
 	
 	m_Body.setTextureRect({ 0, 0, 32, 32 });
 
@@ -248,8 +254,10 @@ void PlayerEntity::UpdateEffects(float dt)
 
 void PlayerEntity::UpdateIcons()
 {
+	float offset = Application::GetInstance().GetWindowSize().x / 1.75f;
+
 	for(size_t i = 0; i < m_Effects.size(); ++i)
-		m_Effects[i]->SetIconPosition({ 35.0f * i + 730.0f, 8.0f });
+		m_Effects[i]->SetIconPosition({ 35.0f * i + offset, 8.0f });
 }
 
 void PlayerEntity::Update(float dt)

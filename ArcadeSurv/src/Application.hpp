@@ -15,6 +15,7 @@ class Application
 		void PopScene();
 
 		sf::RenderWindow& GetWindow();
+
 		void SetWindowView(const sf::View& view);
 		void CloseWindow();
 

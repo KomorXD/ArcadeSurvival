@@ -1,6 +1,7 @@
 #include "WavesManager.hpp"
 #include "Scenes/GameScene.hpp"
 #include "Utils/Random.hpp"
+#include "Application.hpp"
 
 static float Distance(const sf::Vector2f& vec1, const sf::Vector2f& vec2)
 {
@@ -11,6 +12,7 @@ WavesManager::WavesManager(GameScene* scene, std::shared_ptr<PlayerEntity>& play
 	: m_Scene(scene), m_PlayerPtr(playerPtr), m_WaveBar(&m_EnemiesLeft, { 1260.0f, 16.0f }, { 10.0f, 65.0f })
 {
 	m_WaveBar.SetColor(sf::Color::Cyan);
+	m_WaveBar.SetSize({ Application::GetInstance().GetWindowSize().x - 20.0f, 16.0f });
 
 	SpawnEnemiesOnWave();
 }
