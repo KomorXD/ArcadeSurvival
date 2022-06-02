@@ -35,6 +35,8 @@ class PlayerEntity : public Entity
 		bool HasEffect(EffectType eff);
 		bool ClearEffect(EffectType eff);
 
+		inline bool IsDead() const { return m_HP == 0; }
+
 		void ApplyEffect(std::unique_ptr<Effect>&& effect);
 		
 		inline bool IsVulnerable() const { return m_InvulnFrames == 0; }

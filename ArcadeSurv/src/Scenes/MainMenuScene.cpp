@@ -6,6 +6,8 @@
 MainMenuScene::MainMenuScene()
 	: Scene(), m_PlayButton({ 512.0f, 64.0f }, "Play"), m_InstructionsButton({ 512.0f, 64.0f }, "How to play"), m_ExitButton({ 512.0f, 64.0f }, "Exit")
 {
+	Application::GetInstance().GetWindow().setMouseCursorVisible(true);
+
 	sf::Vector2f windowSize = sf::Vector2f(Application::GetInstance().GetWindowSize());
 
 	m_PlayButton.SetPosition({ windowSize.x / 2.0f, windowSize.y * 3.0f / 7.0f });

@@ -1,5 +1,6 @@
 #include "GameScene.hpp"
 #include "PausedScene.hpp"
+#include "DyingScene.hpp"
 #include "../Application.hpp"
 #include "../Utils/Resources.hpp"
 #include "../Utils/Random.hpp"
@@ -173,6 +174,16 @@ static std::string GetFormattedTime(float secondsPassed)
 
 void GameScene::Update(float dt)
 {
+	if(m_Player->IsDead())
+	{
+		m_SnapshotRenderTexture.clear();
+		Render(m_SnapshotRenderTexture);
+
+		Application::GetInstance().PushScene(std::make_unique<DyingScene>(m_SnapshotRenderTexture.getTexture(), m_Player.get()));
+
+		return;
+	}
+
 	m_DeltaTime = dt;
 
 	m_WaveMan->Update(dt);
