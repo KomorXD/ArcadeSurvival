@@ -42,14 +42,18 @@ GameScene::GameScene()
 
 	sf::Vector2u windowSize = Application::GetInstance().GetWindowSize();
 
-	m_SnapshotRenderTexture.create(windowSize.x, windowSize.y);
+	m_SnapshotRenderTexture = std::make_shared<sf::RenderTexture>();
+	m_SnapshotRenderTexture->create(windowSize.x, windowSize.y);
 
 	if(sf::Font* font = Resources::Get().GetFont("IBMPlexMonoRegular"))
 		m_TimeAliveText.setFont(*font);
-	
+
 	m_TimeAliveText.setString("00:00:00");
+	
+	sf::FloatRect textRect = m_TimeAliveText.getLocalBounds();
+
+	m_TimeAliveText.setOrigin({ textRect.left + textRect.width / 2.0f, textRect.top - textRect.height / 2.0f });
 	m_TimeAliveText.setPosition({ Application::GetInstance().GetWindowSize().x / 2.0f, 5.0f });
-	m_TimeAliveText.move({ -m_TimeAliveText.getLocalBounds().width / 1.6f, 0.0f});
 
 	m_Player = std::make_shared<PlayerEntity>(this);
 
@@ -105,7 +109,7 @@ GameScene::~GameScene()
 {
 	Resources& res = Resources::Get();
 
-	res.DeleteTexture("player_atlas");
+	// res.DeleteTexture("player_atlas");
 	res.DeleteTexture("enemy_atlas");
 	res.DeleteTexture("basic_bullet");
 	res.DeleteTexture("effect_haste");
@@ -133,9 +137,9 @@ void GameScene::HandleEvents(sf::Event& e)
 		switch(e.key.code)
 		{
 			case sf::Keyboard::Escape:
-				m_SnapshotRenderTexture.clear();
-				Render(m_SnapshotRenderTexture);
-				Application::GetInstance().PushScene(std::make_unique<PausedScene>(m_SnapshotRenderTexture.getTexture()));
+				m_SnapshotRenderTexture->clear();
+				Render(*m_SnapshotRenderTexture);
+				Application::GetInstance().PushScene(std::make_unique<PausedScene>(m_SnapshotRenderTexture));
 
 				break;
 			default:
@@ -176,10 +180,15 @@ void GameScene::Update(float dt)
 {
 	if(m_Player->IsDead())
 	{
-		m_SnapshotRenderTexture.clear();
-		Render(m_SnapshotRenderTexture);
+		m_Ambient.stop();
+		m_PickupSound.stop();
+		m_EnemyDeathSound.stop();
+		
+		m_SnapshotRenderTexture->clear();
+		Render(*m_SnapshotRenderTexture);
+		m_Player->SetPosition(sf::Vector2f(Application::GetInstance().GetWindowSize()) / 2.0f);
 
-		Application::GetInstance().PushScene(std::make_unique<DyingScene>(m_SnapshotRenderTexture.getTexture(), m_Player.get()));
+		Application::GetInstance().ChangeScene(std::make_unique<DyingScene>(m_SnapshotRenderTexture, m_Player));
 
 		return;
 	}
@@ -189,6 +198,7 @@ void GameScene::Update(float dt)
 	m_WaveMan->Update(dt);
 
 	m_TimeAlive += dt;
+	m_TimeAliveText.setString(GetFormattedTime(m_TimeAlive));
 
 	CheckForPlayerCollisions();
 	
@@ -203,8 +213,6 @@ void GameScene::Update(float dt)
 	std::future<void> bulletsUpdateFuture = std::async(std::launch::async, UpdateEntities<EnemyEntity>,  std::ref<std::vector<EnemyEntity>>(m_Enemies),		   dt);
 	std::future<void> enemiesUpdateFuture = std::async(std::launch::async, UpdateEntities<BulletEntity>, std::ref<std::vector<BulletEntity>>(m_Bullets),	   dt);
 	std::future<void> effectsUpdateFuture = std::async(std::launch::async, UpdateEntities<EffectEntity>, std::ref<std::vector<EffectEntity>>(m_EffectHolders), dt);
-
-	m_TimeAliveText.setString(GetFormattedTime(m_TimeAlive));
 
 	if(m_WaveMan->WaveOver())
 		m_WaveMan->NextWave();
@@ -227,7 +235,8 @@ void GameScene::Render(sf::RenderTarget& renderer)
 	for(auto& effect : m_EffectHolders)
 		effect.Render(renderer);
 
-	m_Player->Render(renderer);
+	if(!m_Player->IsDead())
+		m_Player->Render(renderer);
 	
 	renderer.setView(m_Player->GetInterfaceView());
 

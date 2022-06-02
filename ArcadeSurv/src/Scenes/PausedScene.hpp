@@ -6,7 +6,7 @@
 class PausedScene : public Scene
 {
 	public:
-		PausedScene(const sf::Texture& lastFrame);
+		PausedScene(std::shared_ptr<sf::RenderTexture>& lastFrameRenderTexture);
 		virtual ~PausedScene() = default;
 
 		virtual void HandleEvents(sf::Event& e)			override;
@@ -15,7 +15,9 @@ class PausedScene : public Scene
 		virtual void Render(sf::RenderTarget& renderer) override;
 
 	private:
-		sf::Sprite m_LastFrameSnapshot;
+		std::shared_ptr<sf::RenderTexture> m_LastFrameSnapshotRenderTexture;
+		
+		sf::Sprite m_LastSnapshot;
 		sf::Text   m_PausedText;
 
 		Button m_ResumeButton;

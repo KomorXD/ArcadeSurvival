@@ -2,8 +2,8 @@
 #include "MainMenuScene.hpp"
 #include "../Application.hpp"
 
-DyingScene::DyingScene(const sf::Texture& lastFrameTexture, PlayerEntity* player)
-	: m_LastFrameSnapshot(lastFrameTexture), m_Player(player)
+DyingScene::DyingScene(std::shared_ptr<sf::RenderTexture>& lastFrameRenderTexture, std::shared_ptr<PlayerEntity>& player)
+	: m_LastFrameRenderTexture(lastFrameRenderTexture), m_LastFrameSnapshot(lastFrameRenderTexture->getTexture()), m_Player(player)
 {
 	sf::Vector2i textSize = sf::Vector2i(m_LastFrameSnapshot.getTexture()->getSize());
 

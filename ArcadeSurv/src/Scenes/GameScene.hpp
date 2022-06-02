@@ -52,7 +52,7 @@ class GameScene : public Scene
 		float	 m_TimeAlive;
 		sf::Text m_TimeAliveText;
 
-		sf::RenderTexture m_SnapshotRenderTexture;
+		std::shared_ptr<sf::RenderTexture> m_SnapshotRenderTexture;
 
 		float m_DeltaTime = 1.0f / 60.0f;
 };

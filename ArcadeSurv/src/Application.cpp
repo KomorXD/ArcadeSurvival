@@ -37,13 +37,14 @@ void Application::PushScene(std::unique_ptr<Scene>&& scene)
 
 void Application::ChangeScene(std::unique_ptr<Scene>&& scene)
 {
-	m_Scenes.pop();
+	PopScene();
 	m_Scenes.push(std::move(scene));
 }
 
 void Application::PopScene()
 {
-	m_Scenes.pop();
+	if(!m_Scenes.empty())
+		m_Scenes.pop();
 }
 
 sf::RenderWindow& Application::GetWindow()

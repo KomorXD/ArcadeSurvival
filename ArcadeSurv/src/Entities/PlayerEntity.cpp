@@ -58,7 +58,8 @@ void PlayerEntity::OnDamage(int32_t damage, float dt)
 	m_HP = std::max(m_HP - damage, 0);
 	m_InvulnFrames = static_cast<int32_t>(0.5f / dt);
 
-	m_HurtSound.play();
+	if(!IsDead())
+		m_HurtSound.play();
 }
 
 void PlayerEntity::Heal(int32_t healAmount)
@@ -254,7 +255,7 @@ void PlayerEntity::UpdateEffects(float dt)
 
 void PlayerEntity::UpdateIcons()
 {
-	float offset = Application::GetInstance().GetWindowSize().x / 1.75f;
+	float offset = Application::GetInstance().GetWindowSize().x / 2.0f + Application::GetInstance().GetWindowSize().x / 9.85f -	16.0f;
 
 	for(size_t i = 0; i < m_Effects.size(); ++i)
 		m_Effects[i]->SetIconPosition({ 35.0f * i + offset, 8.0f });
@@ -278,6 +279,10 @@ void PlayerEntity::Update(float dt)
 void PlayerEntity::Render(sf::RenderTarget& renderer)
 {
 	renderer.draw(m_Body);
+
+	if(IsDead())
+		return;
+
 	renderer.setView(m_InterfaceView);
 	
 	for(auto& effect : m_Effects)
@@ -292,5 +297,5 @@ void PlayerEntity::Render(sf::RenderTarget& renderer)
 void PlayerEntity::SetPosition(const sf::Vector2f& pos)
 {
 	m_Body.setPosition(pos);
-	m_PlayerCameraView.setCenter({ GetPosition().x + 16.0f, GetPosition().y + 16.0f });
+	m_PlayerCameraView.setCenter(GetPosition());
 }

@@ -6,7 +6,7 @@
 class DyingScene : public Scene
 {
 	public:
-		DyingScene(const sf::Texture& lastFrameTexture, PlayerEntity* player);
+		DyingScene(std::shared_ptr<sf::RenderTexture>& lastFrameRenderTexture, std::shared_ptr<PlayerEntity>& player);
 		virtual ~DyingScene() = default;
 
 		virtual void HandleEvents(sf::Event& e)			override;
@@ -15,8 +15,10 @@ class DyingScene : public Scene
 		virtual void Render(sf::RenderTarget& renderer) override;
 
 	private:
+		std::shared_ptr<sf::RenderTexture> m_LastFrameRenderTexture;
+		std::shared_ptr<PlayerEntity>	   m_Player;
+
 		sf::Sprite m_LastFrameSnapshot;
-		PlayerEntity* m_Player = nullptr;
 
 		float m_DyingTime = 0.0f;
 };
