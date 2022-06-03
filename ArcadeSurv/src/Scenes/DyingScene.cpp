@@ -1,5 +1,5 @@
 #include "DyingScene.hpp"
-#include "MainMenuScene.hpp"
+#include "GameOverScene.hpp"
 #include "../Application.hpp"
 
 DyingScene::DyingScene(std::shared_ptr<sf::RenderTexture>& lastFrameRenderTexture, std::shared_ptr<PlayerEntity>& player)
@@ -24,8 +24,7 @@ void DyingScene::Update(float dt)
 {
 	if(m_DyingTime >= 2.0f)
 	{
-		Application::GetInstance().PopScene();
-		Application::GetInstance().ChangeScene(std::make_unique<MainMenuScene>());
+		Application::GetInstance().ChangeScene(std::make_unique<GameOverScene>(m_LastFrameRenderTexture, m_Player));
 
 		return;
 	}

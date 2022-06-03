@@ -188,6 +188,7 @@ xcopy /Y /E /I $(ProjectDir)Resources $(ProjectDir)bin\$(Platform)-$(Configurati
     <ClCompile Include="src\Entities\PlayerEntity.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Scenes\DyingScene.cpp" />
+    <ClCompile Include="src\Scenes\GameOverScene.cpp" />
     <ClCompile Include="src\Scenes\GameScene.cpp" />
     <ClCompile Include="src\Scenes\MainMenuScene.cpp" />
     <ClCompile Include="src\Scenes\PausedScene.cpp" />
@@ -208,6 +209,7 @@ xcopy /Y /E /I $(ProjectDir)Resources $(ProjectDir)bin\$(Platform)-$(Configurati
     <ClInclude Include="src\Entities\Enitity.hpp" />
     <ClInclude Include="src\Entities\PlayerEntity.hpp" />
     <ClInclude Include="src\Scenes\DyingScene.hpp" />
+    <ClInclude Include="src\Scenes\GameOverScene.hpp" />
     <ClInclude Include="src\Scenes\GameScene.hpp" />
     <ClInclude Include="src\Scenes\MainMenuScene.hpp" />
     <ClInclude Include="src\Scenes\PausedScene.hpp" />
