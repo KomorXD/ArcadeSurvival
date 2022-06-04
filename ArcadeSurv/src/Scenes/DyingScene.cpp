@@ -8,6 +8,7 @@ DyingScene::DyingScene(std::shared_ptr<sf::RenderTexture>& lastFrameRenderTextur
 	sf::Vector2i textSize = sf::Vector2i(m_LastFrameSnapshot.getTexture()->getSize());
 
 	m_LastFrameSnapshot.setTextureRect({ 0, textSize.y, textSize.x, -textSize.y });
+	player->SetTextureRect({ 256, 0, 32, 32 });
 }
 
 void DyingScene::HandleEvents(sf::Event& e)
@@ -29,8 +30,11 @@ void DyingScene::Update(float dt)
 		return;
 	}
 
+	if(m_DyingTime >= 1.0f)
+		m_Player->SetTextureRect({ 256, 32, 32, 32 });
+
 	float currRatio = m_DyingTime / 2.0f;
-	int8_t currVal = static_cast<int8_t>(200 * currRatio);
+	int8_t currVal = static_cast<int8_t>(230 * currRatio);
 	sf::Color currTextColor = m_LastFrameSnapshot.getColor();
 
 	uint8_t newR = 255 - currVal;

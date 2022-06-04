@@ -20,6 +20,7 @@ class GameOverScene : public Scene
 		std::shared_ptr<PlayerEntity>	   m_Player;
 
 		sf::Sprite m_LastFrameSnapshot;
+		sf::Text   m_GameOverText;
 
 		Button m_QuitToMenuButton;
 		Button m_QuitTheGameButton;

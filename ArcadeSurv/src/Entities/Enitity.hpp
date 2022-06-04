@@ -18,6 +18,7 @@ class Entity
 
 		virtual inline sf::FloatRect GetCollider() const { return m_Body.getGlobalBounds(); }
 		virtual inline sf::Vector2f GetPosition() const { return m_Body.getPosition(); }
+		virtual void SetTextureRect(const sf::IntRect& rect);
 
 	protected:
 		sf::RectangleShape m_Body;

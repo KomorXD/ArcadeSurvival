@@ -279,10 +279,6 @@ void PlayerEntity::Update(float dt)
 void PlayerEntity::Render(sf::RenderTarget& renderer)
 {
 	renderer.draw(m_Body);
-
-	if(IsDead())
-		return;
-
 	renderer.setView(m_InterfaceView);
 	
 	for(auto& effect : m_Effects)

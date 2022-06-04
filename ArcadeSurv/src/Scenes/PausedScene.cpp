@@ -13,9 +13,10 @@ PausedScene::PausedScene(std::shared_ptr<sf::RenderTexture>& lastFrameRenderText
 	m_LastSnapshot.setTextureRect({ 0, textureSize.y, textureSize.x, -textureSize.y });
 	m_LastSnapshot.setColor({ 66, 66, 66 });
 	
-	m_PausedText.setString("PAUSED.");
+	m_PausedText.setString("paused");
 	m_PausedText.setFont(*Resources::Get().GetFont("VT323"));
 	m_PausedText.setCharacterSize(60);
+	m_PausedText.setLetterSpacing(3.0f);
 
 	sf::FloatRect textBounds = m_PausedText.getLocalBounds();
 	sf::Vector2f windowSize = sf::Vector2f(Application::GetInstance().GetWindowSize());

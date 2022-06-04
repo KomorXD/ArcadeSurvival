@@ -36,3 +36,8 @@ void Entity::SetColor(const sf::Color& color)
 {
 	m_Body.setFillColor(color);
 }
+
+void Entity::SetTextureRect(const sf::IntRect& rect)
+{
+	m_Body.setTextureRect(rect);
+}

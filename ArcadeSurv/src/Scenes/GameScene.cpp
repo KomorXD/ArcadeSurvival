@@ -221,11 +221,9 @@ void GameScene::Update(float dt)
 void GameScene::Render(sf::RenderTarget& renderer)
 {
 	renderer.draw(m_Skybox);
-
 	renderer.setView(m_Player->GetPlayerCameraView());
-
 	renderer.draw(m_Floor);
-
+	
 	for(auto& bullet : m_Bullets)
 		bullet.Render(renderer);
 	
@@ -234,12 +232,10 @@ void GameScene::Render(sf::RenderTarget& renderer)
 	
 	for(auto& effect : m_EffectHolders)
 		effect.Render(renderer);
-
-	if(!m_Player->IsDead())
-		m_Player->Render(renderer);
+	
+	m_Player->Render(renderer);
 	
 	renderer.setView(m_Player->GetInterfaceView());
-
 	renderer.draw(m_TimeAliveText);
 	
 	m_WaveMan->Render(renderer);
