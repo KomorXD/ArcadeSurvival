@@ -14,6 +14,7 @@ static void LoadResources()
 	Resources& res = Resources::Get();
 
 	res.LoadTexture("player_atlas");
+	res.LoadTexture("ascended_player_atlas");
 	res.LoadTexture("enemy_atlas");
 	res.LoadTexture("basic_bullet");
 	res.LoadTexture("effect_haste");
@@ -110,6 +111,7 @@ GameScene::~GameScene()
 	Resources& res = Resources::Get();
 
 	// res.DeleteTexture("player_atlas");
+	res.DeleteTexture("ascended_player_atlas");
 	res.DeleteTexture("enemy_atlas");
 	res.DeleteTexture("basic_bullet");
 	res.DeleteTexture("effect_haste");
@@ -283,6 +285,11 @@ void GameScene::DealDamageInArea(const sf::Vector2f& center, float radius, int32
 		if(std::sqrtf(std::powf(center.x - enemyPos.x, 2.0f) + std::powf(center.y - enemyPos.y, 2.0f)) <= radius)
 			enemy.OnDamage(damage, m_DeltaTime);
 	}
+}
+
+void GameScene::ClearEffectEntities()
+{
+	m_EffectHolders.clear();
 }
 
 void GameScene::CheckForPlayerCollisions()

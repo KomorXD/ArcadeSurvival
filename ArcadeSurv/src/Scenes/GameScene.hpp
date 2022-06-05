@@ -25,6 +25,7 @@ class GameScene : public Scene
 		void SpawnPowerUp(EffectEntity&& effect);
 		void SpawnEnemy(const sf::Vector2f& pos, const sf::Color& color, float strength, float movementSpeed);
 		void DealDamageInArea(const sf::Vector2f& center, float radius, int32_t damage);
+		void ClearEffectEntities();
 
 	private:
 		void CheckForPlayerCollisions();

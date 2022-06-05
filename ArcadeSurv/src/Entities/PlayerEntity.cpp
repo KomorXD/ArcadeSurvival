@@ -51,10 +51,34 @@ void PlayerEntity::Input(float dt)
 
 		m_ShootingSound.play();
 	}
+
+	if(!m_IsAscended && m_KillCount == ASCENDED_FORM_KILLS_REQUIRED && sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+	{
+		m_IsAscended = true;
+		m_AscendedTime = 20.0f;
+		m_Body.setTexture(Resources::Get().GetTexture("ascended_player_atlas"));
+
+		sf::IntRect currTextRect = m_Body.getTextureRect();
+
+		m_Body.setTextureRect({ currTextRect.left >= 128 ? currTextRect.left - 128 : currTextRect.left,
+								currTextRect.height, 32, 32 });
+
+		m_Effects.clear();
+
+		m_Scene->DealDamageInArea(m_Body.getPosition(), 600.0f, 100);
+		m_Scene->ClearEffectEntities();
+
+		m_SpeedMultiplier	 = 3.0f;
+		m_FireRateMultiplier = 3.0f;
+		m_DamageMultiplier	 = 10.0f;
+	}
 }
 
 void PlayerEntity::OnDamage(int32_t damage, float dt)
 {
+	if(m_IsAscended)
+		return;
+
 	m_HP = std::max(m_HP - damage, 0);
 	m_InvulnFrames = static_cast<int32_t>(0.5f / dt);
 
@@ -69,7 +93,8 @@ void PlayerEntity::Heal(int32_t healAmount)
 
 void PlayerEntity::OnEnemyKilled()
 {
-	m_KillCount = std::min(m_KillCount + 1, 5);
+	if(!m_IsAscended)
+		m_KillCount = std::min(m_KillCount + 1, 20);
 }
 
 void PlayerEntity::SetSpeedMultiplier(float mul)
@@ -270,7 +295,23 @@ void PlayerEntity::Update(float dt)
 	UpdateEffects(dt);
 
 	m_hpBar.Update(100.0f);
-	m_UltBar.Update(5.0f);
+	m_UltBar.Update(static_cast<float>(ASCENDED_FORM_KILLS_REQUIRED));
+
+	if(m_IsAscended && m_AscendedTime > 0.0f)
+	{
+		m_AscendedTime -= dt;
+		m_KillCount = static_cast<int32_t>(m_AscendedTime);
+	}
+
+	if(m_IsAscended && m_AscendedTime <= 0.0f)
+	{
+		m_IsAscended = false;
+		m_Body.setTexture(Resources::Get().GetTexture("player_atlas"));
+
+		m_SpeedMultiplier    = 1.0f;
+		m_FireRateMultiplier = 1.0f;
+		m_DamageMultiplier   = 1.0f;
+	}
 
 	m_Body.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);
 	m_PlayerCameraView.move(m_MoveDir * m_MovementSpeed * m_SpeedMultiplier * dt);

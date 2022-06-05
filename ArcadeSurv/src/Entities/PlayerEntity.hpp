@@ -36,6 +36,7 @@ class PlayerEntity : public Entity
 		bool ClearEffect(EffectType eff);
 
 		inline bool IsDead() const { return m_HP == 0; }
+		inline bool IsAscended() const { return m_IsAscended; }
 
 		void ApplyEffect(std::unique_ptr<Effect>&& effect);
 		
@@ -43,6 +44,12 @@ class PlayerEntity : public Entity
 		inline const sf::View& GetPlayerCameraView() const { return m_PlayerCameraView; }
 		inline const sf::View& GetInterfaceView() const { return m_InterfaceView; }
 		inline float GetDmgMultiplier() const { return m_DamageMultiplier; }
+
+#ifdef AS_DEBUG
+		static constexpr int32_t ASCENDED_FORM_KILLS_REQUIRED = 20;
+#else
+		static constexpr int32_t ASCENDED_FORM_KILLS_REQUIRED = 100;
+#endif
 
 	private:
 		void MovementInput();
@@ -62,6 +69,9 @@ class PlayerEntity : public Entity
 
 		sf::Vector2f m_MoveDir   = { 0.0f, 0.0f };
 		sf::Vector2f m_FacingDir = { 0.0f, 1.0f };
+
+		bool m_IsAscended	 = false;
+		float m_AscendedTime = 0.0f;
 
 		int32_t m_HP			  = 100;
 		int32_t m_KillCount		  = 0;

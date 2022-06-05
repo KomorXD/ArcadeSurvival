@@ -21,8 +21,11 @@ void WavesManager::Update(float dt)
 {
 	m_WaveBar.Update(static_cast<float>(m_CurrWaveEnemiesSpawned));
 
-	TryToSpawnPowerUp();
-	TryToSpawnWeapon();
+	if(!m_PlayerPtr->IsAscended())
+	{
+		TryToSpawnPowerUp();
+		TryToSpawnWeapon();
+	}
 }
 
 void WavesManager::NextWave()
