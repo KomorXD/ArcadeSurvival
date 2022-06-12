@@ -50,7 +50,7 @@ ScoresScene::ScoresScene(const sf::Sprite& background)
 
 	m_Records.push_back(protToo);
 
-	for(size_t i = 0; i < temp.size() && i < 10; ++i)
+	for(size_t i = 0; i < temp.size() && i < 8; ++i)
 	{
 		ScoreRecord& rec = temp[i];
 
@@ -84,7 +84,7 @@ void ScoresScene::Render(sf::RenderTarget& renderer)
 {
 	renderer.draw(m_Background);
 
-	for(size_t i = 0; i < m_Records.size() && i < 10; ++i)
+	for(size_t i = 0; i < m_Records.size() && i < 8; ++i)
 		RenderRecord(renderer, m_Records[i]);
 }
 

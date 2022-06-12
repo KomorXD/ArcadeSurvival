@@ -20,6 +20,7 @@ class PreGameScene : public Scene
 		void InputValidation();
 
 		sf::Sprite m_Background;
+		sf::Text   m_TextXd;
 		Textbox	   m_NameInputBox;
 
 		bool m_IsNameValid = false;
