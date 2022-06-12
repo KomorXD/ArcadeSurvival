@@ -192,6 +192,8 @@ xcopy /Y /E /I $(ProjectDir)Resources $(ProjectDir)bin\$(Platform)-$(Configurati
     <ClCompile Include="src\Scenes\GameScene.cpp" />
     <ClCompile Include="src\Scenes\MainMenuScene.cpp" />
     <ClCompile Include="src\Scenes\PausedScene.cpp" />
+    <ClCompile Include="src\Scenes\PreGameScene.cpp" />
+    <ClCompile Include="src\Scenes\ScoresScene.cpp" />
     <ClCompile Include="src\UI\Button.cpp" />
     <ClCompile Include="src\UI\ResourceBar.cpp" />
     <ClCompile Include="src\UI\Textbox.cpp" />
@@ -213,7 +215,9 @@ xcopy /Y /E /I $(ProjectDir)Resources $(ProjectDir)bin\$(Platform)-$(Configurati
     <ClInclude Include="src\Scenes\GameScene.hpp" />
     <ClInclude Include="src\Scenes\MainMenuScene.hpp" />
     <ClInclude Include="src\Scenes\PausedScene.hpp" />
+    <ClInclude Include="src\Scenes\PreGameScene.hpp" />
     <ClInclude Include="src\Scenes\Scene.hpp" />
+    <ClInclude Include="src\Scenes\ScoresScene.hpp" />
     <ClInclude Include="src\UI\Button.hpp" />
     <ClInclude Include="src\UI\ResourceBar.hpp" />
     <ClInclude Include="src\UI\Textbox.hpp" />

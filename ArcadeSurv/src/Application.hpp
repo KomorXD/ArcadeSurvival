@@ -3,6 +3,13 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <stack>
 
+struct Stats
+{
+	int32_t waveNo;
+	int32_t enemiesOnWave;
+	float	timeAlive;
+};
+
 class Scene;
 
 class Application
@@ -13,6 +20,9 @@ class Application
 		void PushScene(std::unique_ptr<Scene>&& scene);
 		void ChangeScene(std::unique_ptr<Scene>&& scene);
 		void PopScene();
+
+		void SetUsername(const std::string& name);
+		void SaveStats(Stats stats);
 
 		sf::RenderWindow& GetWindow();
 
@@ -32,6 +42,8 @@ class Application
 		
 		sf::RenderWindow  m_Window;
 		std::stack<std::unique_ptr<Scene>> m_Scenes;
+
+		std::string m_PlayerName;
 
 		static inline Application* s_Instance;
 };

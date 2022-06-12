@@ -32,8 +32,6 @@ static void LoadResources()
 	res.LoadSoundBuffer("effect_pickup");
 	res.LoadSoundBuffer("enemy_death");
 	res.LoadSoundBuffer("player_hurt");
-
-	res.LoadFont("IBMPlexMonoRegular");
 }
 
 GameScene::GameScene()
@@ -190,6 +188,7 @@ void GameScene::Update(float dt)
 		Render(*m_SnapshotRenderTexture);
 		m_Player->SetPosition(sf::Vector2f(Application::GetInstance().GetWindowSize()) / 2.0f);
 
+		Application::GetInstance().SaveStats({ m_WaveMan->GetWaveNo(), m_WaveMan->EnemiesLeft(), m_TimeAlive });
 		Application::GetInstance().ChangeScene(std::make_unique<DyingScene>(m_SnapshotRenderTexture, m_Player));
 
 		return;

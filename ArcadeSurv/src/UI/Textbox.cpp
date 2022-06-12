@@ -41,6 +41,13 @@ void Textbox::SetText(const std::string& text)
 	UpdateText();
 }
 
+void Textbox::AppendChar(char c)
+{
+	m_Text.setString(m_Text.getString() + c);
+
+	UpdateText();
+}
+
 void Textbox::SetSize(const sf::Vector2f& size)
 {
 	m_Body.setSize(size);
@@ -58,6 +65,11 @@ void Textbox::SetColor(const sf::Color& color)
 	m_Body.setFillColor(color);
 }
 
+void Textbox::SetTextColor(const sf::Color& color)
+{
+	m_Text.setFillColor(color);
+}
+
 void Textbox::SetFont(const sf::Font& font)
 {
 	m_Text.setFont(font);
@@ -68,6 +80,16 @@ void Textbox::SetFont(const sf::Font& font)
 void Textbox::SetFontSize(uint32_t fontSize)
 {
 	m_Text.SetFontSize(fontSize);
+}
+
+void Textbox::EraseLastChar()
+{
+	if(m_Text.getString().getSize() == 0)
+		return;
+
+	m_Text.setString(m_Text.getString().substring(0, m_Text.getString().getSize() - 1));
+
+	UpdateText();
 }
 
 void Textbox::UpdateText()

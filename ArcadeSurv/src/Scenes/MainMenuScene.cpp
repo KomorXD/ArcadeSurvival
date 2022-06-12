@@ -1,24 +1,28 @@
 #include "MainMenuScene.hpp"
-#include "GameScene.hpp"
+#include "PreGameScene.hpp"
+#include "ScoresScene.hpp"
 #include "../Utils/Resources.hpp"
 #include "../Application.hpp"
 
 MainMenuScene::MainMenuScene()
-	: Scene(), m_PlayButton({ 512.0f, 64.0f }, "Play"), m_InstructionsButton({ 512.0f, 64.0f }, "How to play"), m_ExitButton({ 512.0f, 64.0f }, "Exit")
+	: Scene(), m_PlayButton({ 512.0f, 64.0f }, "Play"), m_ScoresButton({ 512.0f, 64.0f }, "Highscores"), m_ExitButton({ 512.0f, 64.0f }, "Exit")
 {
 	Application::GetInstance().GetWindow().setMouseCursorVisible(true);
+	Resources::Get().LoadFont("IBMPlexMonoRegular");
 
 	sf::Vector2f windowSize = sf::Vector2f(Application::GetInstance().GetWindowSize());
 
 	m_PlayButton.SetPosition({ windowSize.x / 2.0f, windowSize.y * 3.0f / 7.0f });
 	m_PlayButton.SetFunction([&]()
 	{
-		Application::GetInstance().GetWindow().setMouseCursorVisible(false);
-		Application::GetInstance().ChangeScene(std::make_unique<GameScene>());
+		Application::GetInstance().PushScene(std::make_unique<PreGameScene>(m_Background));
 	});
 
-	m_InstructionsButton.SetPosition({ windowSize.x / 2.0f, windowSize.y * 4.0f / 7.0f });
-	m_InstructionsButton.SetFunction([&]() { ; });
+	m_ScoresButton.SetPosition({ windowSize.x / 2.0f, windowSize.y * 4.0f / 7.0f });
+	m_ScoresButton.SetFunction([&]()
+	{
+		Application::GetInstance().PushScene(std::make_unique<ScoresScene>(m_Background));
+	});
 
 	m_ExitButton.SetPosition({ windowSize.x / 2.0f, windowSize.y * 5.0f / 7.0f });
 	m_ExitButton.SetFunction([&]() { Application::GetInstance().CloseWindow(); });
@@ -46,7 +50,7 @@ void MainMenuScene::HandleEvents(sf::Event& e)
 	if(m_PlayButton.HandleEvents(Application::GetInstance().GetWindow(), e))
 		return;
 
-	if(m_InstructionsButton.HandleEvents(Application::GetInstance().GetWindow(), e))
+	if(m_ScoresButton.HandleEvents(Application::GetInstance().GetWindow(), e))
 		return;
 
 	if(m_ExitButton.HandleEvents(Application::GetInstance().GetWindow(), e))
@@ -64,6 +68,6 @@ void MainMenuScene::Render(sf::RenderTarget& renderer)
 	renderer.draw(m_Background);
 
 	m_PlayButton.Render(renderer);
-	m_InstructionsButton.Render(renderer);
+	m_ScoresButton.Render(renderer);
 	m_ExitButton.Render(renderer);
 }

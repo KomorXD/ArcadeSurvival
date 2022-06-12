@@ -1,6 +1,8 @@
 #include "Application.hpp"
-
 #include "Scenes/GameScene.hpp"
+
+#include <filesystem>
+#include <fstream>
 
 void Application::Run()
 {
@@ -45,6 +47,24 @@ void Application::PopScene()
 {
 	if(!m_Scenes.empty())
 		m_Scenes.pop();
+}
+
+void Application::SetUsername(const std::string& name)
+{
+	m_PlayerName = name;
+}
+
+void Application::SaveStats(Stats stats)
+{
+	std::filesystem::path cwd = std::filesystem::current_path().append("scores.dat");
+	std::ofstream scoresFile(cwd.string().c_str(), std::ios::binary | std::ios::app);
+
+	scoresFile.write((char*)m_PlayerName.c_str(), sizeof(char) * 16);
+	scoresFile.write((char*)&stats.waveNo,		  sizeof(int32_t));
+	scoresFile.write((char*)&stats.enemiesOnWave, sizeof(int32_t));
+	scoresFile.write((char*)&stats.timeAlive,	  sizeof(float));
+
+	scoresFile.close();
 }
 
 sf::RenderWindow& Application::GetWindow()

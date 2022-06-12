@@ -22,6 +22,7 @@ class WavesManager
 		void Render(sf::RenderTarget& renderer);
 
 		inline int32_t EnemiesLeft() const { return m_EnemiesLeft; }
+		inline int32_t GetWaveNo() const { return m_WaveNo; }
 		inline bool WaveOver() const { return m_EnemiesLeft == 0; }
 
 	private:

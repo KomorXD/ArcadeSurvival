@@ -1,23 +1,26 @@
 #pragma once
 
 #include "Scene.hpp"
-#include "../UI/Button.hpp"
+#include "../UI/Textbox.hpp"
 
-class MainMenuScene : public Scene
+class PreGameScene : public Scene
 {
 	public:
-		MainMenuScene();
-		virtual ~MainMenuScene();
+		PreGameScene(const sf::Sprite& background);
+		virtual ~PreGameScene();
 
 		virtual void HandleEvents(sf::Event& e)			override;
 		virtual void HandleInput(float dt)				override;
 		virtual void Update(float dt)					override;
 		virtual void Render(sf::RenderTarget& renderer) override;
 
+		void HandleTextInput(sf::Event& e);
+
 	private:
+		void InputValidation();
+
 		sf::Sprite m_Background;
-		
-		Button m_PlayButton;
-		Button m_ScoresButton;
-		Button m_ExitButton;
+		Textbox	   m_NameInputBox;
+
+		bool m_IsNameValid = false;
 };
