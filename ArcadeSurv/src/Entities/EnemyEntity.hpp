@@ -17,6 +17,7 @@ class EnemyEntity : public Entity
 		void SetMovementSpeed(float ms);
 		void SetStrength(float strength);
 		void SetPlayerPtr(PlayerEntity* ptr);
+		void SetColor(const sf::Color& color);
 		
 		inline float GetStrength() const { return m_Strength; }
 		inline bool IsDead() const { return m_HP == 0 && m_AnimationFrames == 0; }
@@ -29,6 +30,8 @@ class EnemyEntity : public Entity
 		int32_t m_AnimationFrames	   = 0;
 		int32_t m_DyingAnimationFrames = 0;
 		int32_t m_DamageTakenFrames	   = 0;
+
+		sf::Color m_NormalColor;
 
 		float m_MovementSpeed;
 		float m_Strength;

@@ -44,7 +44,7 @@ void EnemyEntity::Update(float dt)
 	}
 
 	if(m_DamageTakenFrames == 0 && m_Body.getFillColor() == sf::Color::Red)
-		m_Body.setFillColor(sf::Color::Green);
+		m_Body.setFillColor(m_NormalColor);
 }
 
 void EnemyEntity::Render(sf::RenderTarget& renderer)
@@ -72,6 +72,12 @@ void EnemyEntity::SetStrength(float strength)
 void EnemyEntity::SetPlayerPtr(PlayerEntity* ptr)
 {
 	m_PlayerPtr = ptr;
+}
+
+void EnemyEntity::SetColor(const sf::Color& color)
+{
+	m_Body.setFillColor(color);
+	m_NormalColor = color;
 }
 
 void EnemyEntity::DyingUpdate(float dt)

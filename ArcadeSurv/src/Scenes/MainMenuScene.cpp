@@ -10,7 +10,22 @@ MainMenuScene::MainMenuScene()
 	Application::GetInstance().GetWindow().setMouseCursorVisible(true);
 	Resources::Get().LoadFont("IBMPlexMonoRegular");
 
+	if(sf::Font* font = Resources::Get().GetFont("IBMPlexMonoRegular"))
+		m_Title.setFont(*font);
+
+	m_Title.setString("giera xd");
+	m_Title.setCharacterSize(60);
+	m_Title.setLetterSpacing(3.0f);
+	m_Title.setOutlineThickness(3.0f);
+
+	sf::FloatRect textRect = m_Title.getLocalBounds();
+
+	m_Title.setOrigin(textRect.left + textRect.width / 2.0f,
+					  textRect.top + textRect.height / 2.0f);
+
 	sf::Vector2f windowSize = sf::Vector2f(Application::GetInstance().GetWindowSize());
+
+	m_Title.setPosition({ windowSize.x / 2.0f, windowSize.y / 7.0f });
 
 	m_PlayButton.SetPosition({ windowSize.x / 2.0f, windowSize.y * 3.0f / 7.0f });
 	m_PlayButton.SetFunction([&]()
@@ -70,4 +85,6 @@ void MainMenuScene::Render(sf::RenderTarget& renderer)
 	m_PlayButton.Render(renderer);
 	m_ScoresButton.Render(renderer);
 	m_ExitButton.Render(renderer);
+	
+	renderer.draw(m_Title);
 }

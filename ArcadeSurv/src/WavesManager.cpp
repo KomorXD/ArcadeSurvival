@@ -62,7 +62,14 @@ void WavesManager::SpawnEnemiesOnWave()
 			continue;
 		}
 
-		m_Scene->SpawnEnemy(randomizedSpawnPosition, sf::Color::Green, 10.0f, 100.0f);
+		sf::Color randomizedColor =
+		{
+			sf::Uint8(Random::Get().IntInRange(0, 255)),
+			sf::Uint8(Random::Get().IntInRange(0, 255)),
+			sf::Uint8(Random::Get().IntInRange(0, 255))
+		};
+
+		m_Scene->SpawnEnemy(randomizedSpawnPosition, randomizedColor, 10.0f, 100.0f + m_WaveNo * 5.0f);
 	}
 }
 

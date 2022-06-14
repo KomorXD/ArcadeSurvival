@@ -94,7 +94,7 @@ void PlayerEntity::Heal(int32_t healAmount)
 void PlayerEntity::OnEnemyKilled()
 {
 	if(!m_IsAscended)
-		m_KillCount = std::min(m_KillCount + 1, 20);
+		m_KillCount = std::min(m_KillCount + 1, ASCENDED_FORM_KILLS_REQUIRED);
 }
 
 void PlayerEntity::SetSpeedMultiplier(float mul)

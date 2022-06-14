@@ -20,4 +20,6 @@ class MainMenuScene : public Scene
 		Button m_PlayButton;
 		Button m_ScoresButton;
 		Button m_ExitButton;
+
+		sf::Text m_Title;
 };
