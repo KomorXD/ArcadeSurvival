@@ -6,4 +6,4 @@ You use WASD to move, Space to shoot and E to activate Ascended Form.
 # Libraries used  
 - [SFML](https://github.com/SFML/SFML)  
 # Build
-The project is made purely with Visual Studio 2022, and back when I made this I had worse of an idea of how to structure my repo in a way that one could just build it, so one would probably need to link SFML himself.
+The project is made purely with Visual Studio 2022, and back when I made this I had worse of an idea of how to structure my repo in a way that one could just build it, so one would probably need to link SFML himself (although I think it should work).
